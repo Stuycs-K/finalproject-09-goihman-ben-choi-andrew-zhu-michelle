@@ -16,4 +16,5 @@ How does the user interact with this program? (CHANGE THIS!!!!!)
 
 ### Resources/ References:
 
-list here(CHANGE THIS!!!!!)
+list here:
+- https://docs.python.org/3/library/zipfile.html 
