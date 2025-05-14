@@ -3,7 +3,7 @@
  
 ### GROUP NAME HERE (CHANGE THIS!!!!!)
 
-Group Members Here (CHANGE THIS!!!!!)
+Group Members Here Benjamin Goihman, Andrew Choi, Michelle Zhu
        
 ### Project Description:
 
