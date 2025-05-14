@@ -2,8 +2,8 @@
 
 ## Group Members:
 
-names here.(CHANGE THIS!!!!!)
-       
+Benjamin Goihman, Andrew Choi, Michelle Zhu
+
 # Intentions:
 
 A statement of the problem you are solving and/or a high level description of the project. (CHANGE THIS!!!!!)
