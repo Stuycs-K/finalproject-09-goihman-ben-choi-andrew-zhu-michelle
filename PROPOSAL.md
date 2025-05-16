@@ -6,15 +6,14 @@ Benjamin Goihman, Andrew Choi, Michelle Zhu
 
 # Intentions:
 
-A statement of the problem you are solving and/or a high level description of the project. (CHANGE THIS!!!!!)
-    
+We plan on making a cybersecurity tool in python for zips. This will include, a zip file dictionary attack, a zip file mask attack, zip bomb detection, and a zip bomb makers.    
 # Intended usage:
 
-A description as to how the project will be used (describe the user interface). (CHANGE THIS!!!!!)
+It will be used through the terminal, with different make commands to use the different features.
   
 # Technical Details:
 
-(CHANGE THIS!!!!!)
+It will be a python program that will use the zipfile library to create the different features. We will be using the argparse library to create the different commands. We will be using the os library to navigate the file system. We will be 
 
 A description of your technical design. This should include: 
    
