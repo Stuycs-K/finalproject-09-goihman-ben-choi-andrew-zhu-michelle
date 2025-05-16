@@ -7,7 +7,13 @@ Group Members Here Benjamin Goihman, Andrew Choi, Michelle Zhu
        
 ### Project Description:
 
-Explain what is this project. (CHANGE THIS!!!!!)
+A python cracker which will crack password-protected zip archives. There will be multiple 
+methods of cracking masswords:  
+1. Wordlist attack with logging and various wordlist formats  
+2. Mask attacks, which will allow for patterns to crack passwords  
+3. ZIP bomb detection, analyzing compression ratios and detect archive structures  
+4. Additional features like protecting zip archives and support for other archive formats
+
   
 ### Instructions:
 
