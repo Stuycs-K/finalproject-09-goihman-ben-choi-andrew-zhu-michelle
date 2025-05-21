@@ -13,5 +13,5 @@ class zip_bomb_detector:
 def main():
 	return 0
 
-if __name__ == '__main--':
+if __name__ == '__main__':
 	main()
