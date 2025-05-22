@@ -4,7 +4,7 @@
 
 Benjamin Goihman, Andrew Choi, Michelle Zhu
 
-# Intentions:
+# Intention:
 
 We plan on making a cybersecurity tool in python for zips. This will include, a zip file dictionary attack, a zip file mask attack, zip bomb detection, and a zip bomb makers.    
 # Intended usage:
@@ -26,4 +26,4 @@ How you are breaking down the project and who is responsible for which parts.
 
 5/19 - setup make and finish proposal
 5/21 - zip file dictionary attack
-5/23 - 
+5/23 - zip file mask attack
