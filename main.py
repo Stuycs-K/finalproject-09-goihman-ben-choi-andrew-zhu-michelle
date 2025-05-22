@@ -4,28 +4,24 @@ import sys
 import itertools
 import string
 
-def dict_attack(zip_path, wordlist_path):
+
+def attack(zip_path, wordlist):
     try:
         if not os.path.exists(zip_path):
             print(f"Error: Zip file '{zip_path}' not found")
             return None
-        if not os.path.exists(wordlist_path):
-            print(f"Error: Wordlist file '{wordlist_path}' not found")
-            return None
 
         with zipfile.ZipFile(zip_path) as zip_file:
-            with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
-                for password in wordlist:
-                    password = password.strip()
-                    if not password:
+            for password in wordlist:
+                password = password.strip()
+                if not password:
                         continue
-                    
-                    try:
-                        zip_file.extractall(pwd=password.encode())
-                        print(f"Password found: {password}")
-                        return password
-                    except:
-                        continue
+                try:
+                    zip_file.extractall(pwd=password.encode())
+                    print(f"Password found: {password}")
+                    return password
+                except:
+                    continue
             
             print("Password not found in wordlist")
             return None
@@ -39,7 +35,12 @@ def dict_attack(zip_path, wordlist_path):
 
 def mask_attack(zip_path, mask):
       return None;
-
+def dict_attack(zip_path, wordlist_path):
+    if not os.path.exists(wordlist_path):
+        print(f"Error: Wordlist file '{wordlist_path}' not found")
+        return None
+    with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
+        return attack(zip_path, wordlist)
 def main():
 	if len(sys.argv) < 3:
 		print("Usage: python main.py wordlist <zip_file> <wordlist_file>")
