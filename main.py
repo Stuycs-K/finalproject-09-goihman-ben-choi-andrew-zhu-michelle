@@ -32,9 +32,24 @@ def attack(zip_path, wordlist):
     except Exception as e:
         print(f"Error: {str(e)}")
         return None
+    
+def matches_mask(word, mask):
+    word = word.strip()
+    mask = mask.strip()
+    if len(word) != len(mask):
+        return False
+    for w_char, m_char in zip(word, mask):
+        if m_char != '_' and w_char != m_char:
+            return False
+    return True
 
-def mask_attack(zip_path, mask):
-      return None;
+def mask_attack(zip_path, wordlist_path, mask):
+    if not os.path.exists(wordlist_path):
+        print(f"Error: Wordlist file '{wordlist_path}' not found")
+        return None
+    with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
+        wordlist = [word for word in wordlist if matches_mask(word.strip(), mask)]
+        return attack(zip_path, wordlist)
 def dict_attack(zip_path, wordlist_path):
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
@@ -52,10 +67,10 @@ def main():
 			return 1
 		dict_attack(sys.argv[2], sys.argv[3])
 	elif sys.argv[1] == 'mask':
-		if len(sys.argv) != 4:
-			print("Usage: python main.py mask <zip_file> <mask>")
+		if len(sys.argv) != 5:
+			print("Usage: python main.py mask <zip_file> <wordlist_file> <mask>")
 			return 1
-		mask_attack(sys.argv[2], sys.argv[3])
+		mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
 	elif sys.argv[1] == 'bomb':
 		print('bomb')
 	return 0

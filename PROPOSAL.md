@@ -17,6 +17,9 @@ It will be a python program that will use the zipfile library to create the diff
 
 A description of your technical design. This should include: 
    
+Dictionary attack: simple for loop through wordlist and try to extract with password
+Mask attack: same as above but only try the passwords that match the mask, mask will be defined by a string of underscores (which represents a wildcard), then letters will be used to represent the characters that are known. For example _____ is any password with 5 characters. While b___a is any password with 5 characters that starts with b and ends with a.
+Zip bomb: 
 How you will be using the topics covered in class in the project.
      
 How you are breaking down the project and who is responsible for which parts.
