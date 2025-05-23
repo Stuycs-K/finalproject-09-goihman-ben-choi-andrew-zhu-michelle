@@ -78,24 +78,35 @@ def bomb_detection(zip_path):
         print(E)
         return False
 
+'''
+import zipfile
+
+with zipfile.ZipFile('a_file.zip') as z
+    print(f'total files size={sum(e.file_size for e in z.infolist())}')
+'''
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: make wordlist <zip_file> <wordlist_file>")
-        return 1
+        print("Usage: make wordlist ARGS=<zip_file> <wordlist_file>")
+
     if sys.argv[1] == 'wordlist':
         if len(sys.argv) != 4:
-            print("Usage: make wordlist <zip_file> <wordlist_file>")
+            print("Usage: make wordlist ARGS=<zip_file> <wordlist_file>")
             return 1
         dict_attack(sys.argv[2], sys.argv[3])
     if sys.argv[1] == 'mask':
         if len(sys.argv) != 5:
-            print("Usage: make mask <zip_file> <wordlist_file> <mask>")
+            print("Usage: make mask ARGS=<zip_file> <wordlist_file> <mask>")
             return 1
         mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
-    if sys.argv[1] == 'bomb':
+    if sys.argv[1] == 'make_bomb':
         if len(sys.argv) != 3:
-            print('Usage: make bomb ARGS=<zip_file>')
+            print('Usage: make make_bomb ARGS=<zip_file>')
+            return 1
+        make_bomb(sys.argv[2])
+    if sys.argv[1] == 'detect_bomb':
+        if len(sys.argv) != 3:
+            print('Usage: make detect_bomb ARGS=<zip_file>')
             return 1
         bomb_detection(sys.argv[2])
     return 0
