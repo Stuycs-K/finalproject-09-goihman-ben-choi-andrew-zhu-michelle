@@ -45,6 +45,44 @@ def matches_mask(word, mask):
     return True
 
 
+def brute_mask(zip_path, mask):
+    unknown_positions = [i for i, char in enumerate(mask) if char == '_']
+    
+    if not unknown_positions:
+        return attack(zip_path, [mask])
+    
+    charset = string.ascii_letters + string.digits
+    
+    try:
+        if not os.path.exists(zip_path):
+            print(f"Error: Zip file '{zip_path}' not found")
+            return None
+
+        with zipfile.ZipFile(zip_path) as zip_file:
+            for combination in itertools.product(charset, repeat=len(unknown_positions)):
+                password = list(mask)
+                for i, char in enumerate(combination):
+                    password[unknown_positions[i]] = char
+                password = ''.join(password)
+                
+                try:
+                    zip_file.extractall(pwd=password.encode())
+                    print(f"Password found: {password}")
+                    return password
+                except:
+                    continue
+            
+            print("Password not found in brute force attack")
+            return None
+
+    except zipfile.BadZipFile:
+        print("Error: Invalid zip file")
+        return None
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return None
+
+
 def mask_attack(zip_path, wordlist_path, mask):
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
@@ -83,18 +121,31 @@ def bomb_detection(zip_path):
 def main():
     if len(sys.argv) < 3:
         print("Usage: make wordlist <zip_file> <wordlist_file>")
+        print("       make mask <zip_file> <mask>") 
+        print("       make mask <zip_file> <wordlist_file> <mask>")
+        print("       make brute <zip_file> <mask>")
+        print("       make bomb <zip_file>")
         return 1
     if sys.argv[1] == 'wordlist':
         if len(sys.argv) != 4:
             print("Usage: make wordlist <zip_file> <wordlist_file>")
             return 1
         dict_attack(sys.argv[2], sys.argv[3])
-    if sys.argv[1] == 'mask':
-        if len(sys.argv) != 5:
-            print("Usage: make mask <zip_file> <wordlist_file> <mask>")
+    elif sys.argv[1] == 'mask':
+        if len(sys.argv) == 4:
+            brute_mask(sys.argv[2], sys.argv[3])
+        elif len(sys.argv) == 5:
+            mask_attack(sys.argv[2], sys.argv[3], sys.argv[4])
+        else:
+            print("Usage: make mask <zip_file> <mask>")
+            print("   or: make mask <zip_file> <wordlist_file> <mask>")
             return 1
-        mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
-    if sys.argv[1] == 'bomb':
+    elif sys.argv[1] == 'brute':
+        if len(sys.argv) != 4:
+            print("Usage: make brute <zip_file> <mask>")
+            return 1
+        brute_mask(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == 'bomb':
         if len(sys.argv) != 3:
             print('Usage: make bomb ARGS=<zip_file>')
             return 1

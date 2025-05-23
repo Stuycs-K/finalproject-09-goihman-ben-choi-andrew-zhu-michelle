@@ -30,3 +30,6 @@ How you are breaking down the project and who is responsible for which parts.
 5/19 - setup make and finish proposal
 5/21 - zip file dictionary attack
 5/25 - zip file mask attack
+6/1 - zip bomb detection
+6/3 - zip bomb maker
+6/5 - finish project
