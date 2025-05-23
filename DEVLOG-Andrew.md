@@ -18,3 +18,7 @@ Researching how zip bomb attacks work and how to detect them, and also how to br
 ### 2025-05-21 - Config
 Configuring the makefile to have args and using those args in main.py, creating skeleton code - 30 mins
 
+### 2025-05-23 - Bomb detection
+Figured out nested zip detection - 25 mins
+Tested the password cracking and nested zips - 15 mins
+
