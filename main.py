@@ -15,14 +15,14 @@ def attack(zip_path, wordlist):
             for password in wordlist:
                 password = password.strip()
                 if not password:
-                        continue
+                    continue
                 try:
                     zip_file.extractall(pwd=password.encode())
                     print(f"Password found: {password}")
                     return password
                 except:
                     continue
-            
+
             print("Password not found in wordlist")
             return None
 
@@ -32,7 +32,8 @@ def attack(zip_path, wordlist):
     except Exception as e:
         print(f"Error: {str(e)}")
         return None
-    
+
+
 def matches_mask(word, mask):
     word = word.strip()
     mask = mask.strip()
@@ -43,37 +44,62 @@ def matches_mask(word, mask):
             return False
     return True
 
+
 def mask_attack(zip_path, wordlist_path, mask):
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
         return None
     with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
-        wordlist = [word for word in wordlist if matches_mask(word.strip(), mask)]
+        wordlist = [word for word in wordlist if matches_mask(
+            word.strip(), mask)]
         return attack(zip_path, wordlist)
+
+
 def dict_attack(zip_path, wordlist_path):
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
         return None
     with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
         return attack(zip_path, wordlist)
+
+
+def bomb_detection(zip_path):
+    try:
+        with zipfile.ZipFile(zip_path, 'r') as zip_file:
+            files = zip_file.namelist()
+            for file in files:
+                if file.lower().endswith(".zip"):
+                    print("Detected a nested zipfile, potentially harmful")
+                    return True
+
+    except zipfile.BadZipFile:
+        print("bad zip file")
+        return False
+    except Exception as E:
+        print(E)
+        return False
+
+
 def main():
-	if len(sys.argv) < 3:
-		print("Usage: python main.py wordlist <zip_file> <wordlist_file>")
-		return 1
-	
-	if sys.argv[1] == 'wordlist':
-		if len(sys.argv) != 4:
-			print("Usage: python main.py wordlist <zip_file> <wordlist_file>")
-			return 1
-		dict_attack(sys.argv[2], sys.argv[3])
-	elif sys.argv[1] == 'mask':
-		if len(sys.argv) != 5:
-			print("Usage: python main.py mask <zip_file> <wordlist_file> <mask>")
-			return 1
-		mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
-	elif sys.argv[1] == 'bomb':
-		print('bomb')
-	return 0
+    if len(sys.argv) < 3:
+        print("Usage: make wordlist <zip_file> <wordlist_file>")
+        return 1
+    if sys.argv[1] == 'wordlist':
+        if len(sys.argv) != 4:
+            print("Usage: make wordlist <zip_file> <wordlist_file>")
+            return 1
+        dict_attack(sys.argv[2], sys.argv[3])
+    if sys.argv[1] == 'mask':
+        if len(sys.argv) != 5:
+            print("Usage: make mask <zip_file> <wordlist_file> <mask>")
+            return 1
+        mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
+    if sys.argv[1] == 'bomb':
+        if len(sys.argv) != 3:
+            print('Usage: make bomb ARGS=<zip_file>')
+            return 1
+        bomb_detection(sys.argv[2])
+    return 0
 
 if __name__ == '__main__':
-	main()
+    main()
