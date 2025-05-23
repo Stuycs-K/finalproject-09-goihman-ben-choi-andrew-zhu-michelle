@@ -7,10 +7,6 @@ import string
 
 def attack(zip_path, wordlist):
     try:
-        if not os.path.exists(zip_path):
-            print(f"Error: Zip file '{zip_path}' not found")
-            return None
-
         with zipfile.ZipFile(zip_path) as zip_file:
             for password in wordlist:
                 password = password.strip()
