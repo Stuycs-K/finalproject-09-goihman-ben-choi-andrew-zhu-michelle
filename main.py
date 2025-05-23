@@ -7,10 +7,6 @@ import string
 
 def attack(zip_path, wordlist):
     try:
-        if not os.path.exists(zip_path):
-            print(f"Error: Zip file '{zip_path}' not found")
-            return None
-
         with zipfile.ZipFile(zip_path) as zip_file:
             for password in wordlist:
                 password = password.strip()
@@ -105,10 +101,13 @@ def bomb_detection(zip_path):
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
             files = zip_file.namelist()
+            zip_size = 0
             for file in files:
                 if file.lower().endswith(".zip"):
                     print("Detected a nested zipfile, potentially harmful")
                     return True
+                with open(file) as f:
+                    print(f)
 
     except zipfile.BadZipFile:
         print("bad zip file")
