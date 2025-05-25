@@ -125,30 +125,27 @@ with zipfile.ZipFile('a_file.zip') as z
 
 def main():
     if len(sys.argv) < 3:
-<<<<<<< HEAD
-        print("Usage: make wordlist ARGS=<zip_file> <wordlist_file>")
-
-=======
         print("Usage: make wordlist <zip_file> <wordlist_file>")
         print("       make mask <zip_file> <mask>") 
         print("       make mask <zip_file> <wordlist_file> <mask>")
         print("       make brute <zip_file> <mask>")
         print("       make bomb <zip_file>")
         return 1
->>>>>>> d0c9dd32faf24b00cd8c419255353a404eb1e87a
     if sys.argv[1] == 'wordlist':
         if len(sys.argv) != 4:
             print("Usage: make wordlist ARGS=<zip_file> <wordlist_file>")
             return 1
         dict_attack(sys.argv[2], sys.argv[3])
-<<<<<<< HEAD
     if sys.argv[1] == 'mask':
         if len(sys.argv) != 5:
             print("Usage: make mask ARGS=<zip_file> <wordlist_file> <mask>")
             return 1
         mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
     if sys.argv[1] == 'make_bomb':
-=======
+        if len(sys.argv) != 3:
+            print("Usage: make make_bomb ARGS=<zip_file>")
+            return 1
+        make_bomb(sys.argv[2])
     elif sys.argv[1] == 'mask':
         if len(sys.argv) == 4:
             brute_mask(sys.argv[2], sys.argv[3])
@@ -164,7 +161,6 @@ def main():
             return 1
         brute_mask(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'bomb':
->>>>>>> d0c9dd32faf24b00cd8c419255353a404eb1e87a
         if len(sys.argv) != 3:
             print('Usage: make make_bomb ARGS=<zip_file>')
             return 1
