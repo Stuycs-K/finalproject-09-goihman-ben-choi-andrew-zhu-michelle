@@ -24,3 +24,7 @@ Tested the password cracking and nested zips - 15 mins
 Researched zip bombs with password protection and how to analyze compression ratios - 30 mins
 https://labex.io/tutorials/linux-how-to-analyze-zip-file-compression-ratios-in-linux-409810
 
+### 2025-05-27 - Zip Bomb Detection
+Finished compression ratio testing - 15 mins
+Tested compression ratios with a zip bomb with high ratios - 15 mins
+
