@@ -25,5 +25,5 @@ Researched zip bombs with password protection and how to analyze compression rat
 https://labex.io/tutorials/linux-how-to-analyze-zip-file-compression-ratios-in-linux-409810
 
 ### 2025-05-27 - Zip Bomb Detection
-Finished 
+Finished compression ratio testing - 15 mins
 
