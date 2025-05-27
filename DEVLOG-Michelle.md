@@ -16,5 +16,6 @@ Research zip bomb and zip bomb detection (https://www.microsoft.com/en-us/window
 Corrected print statements in main function - 5 min
 Added args to makefile & main function - 5 min
 
-### 2025-05-27 - Revise README.md & Plan video breakdown
+### 2025-05-27 - Revised README.md & made make_bomb
 Revised README.md - 20 min
+Developed make__bomb algorithm - 20 min

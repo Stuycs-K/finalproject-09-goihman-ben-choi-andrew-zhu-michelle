@@ -136,12 +136,12 @@ def bomb_detection(zip_path):
         print(E)
         return False
 
-'''
-import zipfile
+def make_bomb(zip_path):
+    with zipfile.ZipFile(zip_path, 'w') as zip_file:
+        for i in range(1000):
+            zip_file.writestr(f'file_{i}.txt', 'Hello, world!')
 
-with zipfile.ZipFile('a_file.zip') as z
-    print(f'total files size={sum(e.file_size for e in z.infolist())}')
-'''
+# make_bomb('test_bomb.zip')
 
 def main():
     if len(sys.argv) < 3:
