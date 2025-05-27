@@ -98,17 +98,24 @@ def dict_attack(zip_path, wordlist_path):
 
 
 def bomb_detection(zip_path):
+    MAX_C_RATIO = 50
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
             files = zip_file.namelist()
-            zip_size = 0
+            compressed = 0
+            uncompressed = 0
             for file in files:
                 if file.lower().endswith(".zip"):
                     print("Detected a nested zipfile, potentially harmful")
                     return True
-                with open(file) as f:
-                    print(f)
-
+                compressed+= file.compress_size
+                uncompressed+= file.file_size
+            if compressed > 0:
+                compression_ratio = uncompressed / compressed
+                if compression_ratio > MAX_C_RATIO:
+                    print("Very high compression ratio: exceeds max of ", MAX_C_RATIO)
+                    return True
+        return False
     except zipfile.BadZipFile:
         print("bad zip file")
         return False
