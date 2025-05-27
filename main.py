@@ -105,10 +105,12 @@ def bomb_detection(zip_path):
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
             files = zip_file.namelist()
             
+            # check for too many files
             if len(files) > MAX_FILES:
                 print(f"Too many files, more than {MAX_FILES} files, contains {len(files)} files.")
                 return True
             max_d = 0
+            # check for too many directories
             for file in files:
                 curr_d = file.count('/')
                 max_d = max(curr_d, max_d)
@@ -117,6 +119,7 @@ def bomb_detection(zip_path):
                 return True
             compressed = 0
             uncompressed = 0
+            # check for nested zip files
             for file in zip_file.filelist:
                 if str(file).lower().endswith(".zip"):
                     print("Detected a nested zipfile, potentially harmful")
@@ -130,7 +133,7 @@ def bomb_detection(zip_path):
                     return True
         return False
     except zipfile.BadZipFile:
-        print("bad zip file")
+        print("Bad zip file")
         return False
     except Exception as E:
         print(E)
