@@ -27,4 +27,5 @@ https://labex.io/tutorials/linux-how-to-analyze-zip-file-compression-ratios-in-l
 ### 2025-05-27 - Zip Bomb Detection
 Finished compression ratio testing - 15 mins
 Tested compression ratios with a zip bomb with high ratios - 15 mins
+Tested bomb_detection w/ zip files with lots of files - 10 mins
 

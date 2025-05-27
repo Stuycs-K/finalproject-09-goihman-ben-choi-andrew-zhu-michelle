@@ -10,7 +10,7 @@
 A powerful Python-based ZIP archive password cracking tool that provides multiple methods to recover passwords from protected archives. The tool is designed to be both efficient and user-friendly, offering various attack methods:
 1. Wordlist attack with logging and various wordlist formats  
 2. Mask attacks, which will allow for patterns to crack passwords  
-3. ZIP bomb detection, analyzing compression ratios and detect archive structures  
+3. ZIP bomb detection, analyzing compression ratios and detect archive structures
 4. Additional features like protecting zip archives and support for other archive formats  
 This would be run through the command line, with options in the README.
   
