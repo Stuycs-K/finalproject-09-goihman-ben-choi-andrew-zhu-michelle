@@ -11,4 +11,3 @@ make_bomb:
 
 detect_bomb:
 	@python3 main.py detect_bomb $(ARGS)
-
