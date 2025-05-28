@@ -104,11 +104,10 @@ def bomb_detection(zip_path):
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
             files = zip_file.namelist()
-            
             # check for too many files
-            if len(files) > MAX_FILES:
-                print(f"Too many files, more than {MAX_FILES} files, contains {len(files)} files.")
-                return True
+            # if len(files) > MAX_FILES:
+            #     print(f"Too many files, more than {MAX_FILES} files, contains {len(files)} files.")
+            #     return True
             max_d = 0
             # check for too many directories
             for file in files:
@@ -131,6 +130,7 @@ def bomb_detection(zip_path):
                 if compression_ratio > MAX_C_RATIO:
                     print(f"Very high compression ratio: exceeds max of {MAX_C_RATIO}, ratio is {compression_ratio}")
                     return True
+        print(zip_file.filelist)
         return False
     except zipfile.BadZipFile:
         print("Bad zip file")
@@ -142,7 +142,7 @@ def bomb_detection(zip_path):
 def make_bomb(zip_path):
     with zipfile.ZipFile(zip_path, 'w') as zip_file:
         for i in range(1000):
-            zip_file.writestr(f'file_{i}.txt', 'Hello, world!')
+            zip_file.writestr(f'file_{i}.txt', 'a'*1000000)
 
 # make_bomb('test_bomb.zip')
 
@@ -152,7 +152,7 @@ def main():
         print("       make mask <zip_file> <mask>") 
         print("       make mask <zip_file> <wordlist_file> <mask>")
         print("       make brute <zip_file> <mask>")
-        print("       make bomb <zip_file>")
+        print("       make detect_bomb <zip_file>")
         return 1
     if sys.argv[1] == 'wordlist':
         if len(sys.argv) != 4:
