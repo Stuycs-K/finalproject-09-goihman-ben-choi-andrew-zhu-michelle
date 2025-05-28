@@ -32,3 +32,4 @@ Tested bomb_detection w/ zip files with lots of files - 10 mins
 ### 2025-05-28 - Zip maker
 Researched basic zipfile compressions - 10 mins
 Worked on creating a binary reader to find patterns - 15 mins
+Worked on basic pattern recognition - 15 mins

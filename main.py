@@ -156,6 +156,19 @@ def make_bomb(zip_path):
     finally:
         shutil.rmtree(temp_dir)
 
+def make_zip(file_names):
+    MIN_PATTERN = 3
+    MAX_PATTERN = 100
+    binary_files = {}
+    for file in file_names:
+        with open(file, 'rb') as f:
+            binary_files[file] = f.read()
+    for binary in binary_files.values():
+        patterns = {}
+        for sequence_len in range(MIN_PATTERN, MAX_PATTERN):
+            for i in range(len(binary) - sequence_len):
+                print(i)
+        
 
 def main():
     if len(sys.argv) < 3:
