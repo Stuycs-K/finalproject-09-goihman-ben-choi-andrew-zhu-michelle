@@ -144,6 +144,13 @@ def make_bomb(zip_path):
         for i in range(1000):
             zip_file.writestr(f'file_{i}.txt', 'Hello, world!')
 
+def make_zip(file_names):
+    binary_files = []
+    for file in file_names:
+        with open(file, 'rb') as f:
+            binary_files.append(f.read())
+    print(binary_files)
+            
 # make_bomb('test_bomb.zip')
 
 def main():
@@ -193,6 +200,11 @@ def main():
             print('Usage: make detect_bomb ARGS=<zip_file>')
             return 1
         bomb_detection(sys.argv[2])
+    if sys.argv[1] == 'make_zip':
+        if len(sys.argv) < 3:
+            print('Usage: make make_zip ARGS="<file1> <file2>...')
+            return -1
+        make_zip(sys.argv[2:])
     return 0
 
 if __name__ == '__main__':
