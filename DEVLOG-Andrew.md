@@ -33,3 +33,4 @@ Tested bomb_detection w/ zip files with lots of files - 10 mins
 Researched basic zipfile compressions - 10 mins
 Worked on creating a binary reader to find patterns - 15 mins
 Worked on basic pattern recognition - 15 mins
+Worked on zip file compression, first read with binary, then basic pattern recognition, and storing flags for the patterns, then writing to a file, lastly attempting to decompress. - 60 mins
