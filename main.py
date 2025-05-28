@@ -157,18 +157,46 @@ def make_bomb(zip_path):
         shutil.rmtree(temp_dir)
 
 def make_zip(file_names):
-    MIN_PATTERN = 3
+    MIN_PATTERN = 4
     MAX_PATTERN = 100
+    compressed_size = 0
+    original_size = 0
     binary_files = {}
     for file in file_names:
         with open(file, 'rb') as f:
             binary_files[file] = f.read()
-    for binary in binary_files.values():
+    compressed_files = {}
+    for file, binary in binary_files.items():
         patterns = {}
-        for sequence_len in range(MIN_PATTERN, MAX_PATTERN):
-            for i in range(len(binary) - sequence_len):
-                print(i)
-        
+        for sequence_len in range(MIN_PATTERN, min(MAX_PATTERN, len(binary))):
+            for i in range(len(binary) - sequence_len + 1):
+                pattern = binary[i:i+sequence_len]
+                if pattern in patterns:
+                    patterns[pattern].append(i)
+                else:
+                    patterns[pattern] = [i]
+        best_patterns = {}
+        for pattern, pos in patterns.items():
+            if len(pos) > 1: # >1 pattern occurs
+                best_patterns[pattern] = pos
+        new_data = bytearray(binary)
+        pid = 0
+        for pattern in best_patterns:
+            if len(pattern) > MIN_PATTERN:
+                marker = b'\xFF\xFE'
+                flag = marker + pid.to_bytes(2, 'big')
+                new_data = new_data.replace(pattern, flag)
+                pid+= 1
+        compressed_files[file] = bytes(new_data)
+        original_size+= len(binary)
+        compressed_size+= len(new_data)
+    print(f'Original size: {original_size}')
+    print(f'Compressed size: {compressed_size}')    
+    with open('compressed_output.bin', 'wb') as output_file:
+        for filename, compressed_data in compressed_files.items():
+            output_file.write(compressed_data)
+    
+    return compressed_files
 
 def main():
     if len(sys.argv) < 3:
