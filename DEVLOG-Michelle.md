@@ -20,3 +20,6 @@ Added args to makefile & main function - 5 min
 Revised README.md - 20 min
 Developed make__bomb algorithm - 20 min
 Left helpful comments - 5 min
+
+### 2025-05-28 - improve detect_bomb and make_bomb
+I improved make_bomb by making it much more aggressive by making 1mb per file instead of only Hello, World! and I also improved detect_bomb removing the overly sensitive check for amount of files. - 30 min
