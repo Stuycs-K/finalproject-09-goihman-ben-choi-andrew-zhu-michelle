@@ -145,11 +145,11 @@ def make_bomb(zip_path):
             zip_file.writestr(f'file_{i}.txt', 'Hello, world!')
 
 def make_zip(file_names):
-    binary_files = []
+    binary_files = {}
     for file in file_names:
         with open(file, 'rb') as f:
-            binary_files.append(f.read())
-    print(binary_files)
+            binary_files[file] = f.read()
+    print(binary_files[file_names[0]])
             
 # make_bomb('test_bomb.zip')
 
