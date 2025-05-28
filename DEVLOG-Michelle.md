@@ -20,3 +20,6 @@ Added args to makefile & main function - 5 min
 Revised README.md - 20 min
 Developed make__bomb algorithm - 20 min
 Left helpful comments - 5 min
+
+### 2025-05-27 - Presentation
+Worked on slides
