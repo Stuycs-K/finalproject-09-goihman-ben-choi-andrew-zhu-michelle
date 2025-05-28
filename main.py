@@ -198,6 +198,29 @@ def make_zip(file_names):
     
     return compressed_files
 
+def decompress_file(compressed_filename, pattern_dict):
+    with open(compressed_filename, 'rb') as f:
+        compressed_data = f.read()
+    
+    result = bytearray()
+    i = 0
+    marker = b'\xFF\xFE'
+    
+    while i < len(compressed_data):
+        if i + 1 < len(compressed_data) and compressed_data[i:i+2] == marker:
+            if i + 3 < len(compressed_data):
+                pattern_id = int.from_bytes(compressed_data[i+2:i+4], 'big')
+                if pattern_id in pattern_dict:
+                    result.extend(pattern_dict[pattern_id])
+                i+= 4 
+            else:
+                result.append(compressed_data[i])
+                i+= 1
+        else:
+            result.append(compressed_data[i])
+            i+= 1
+    return bytes(result)
+
 def main():
     if len(sys.argv) < 3:
         print("Usage: make wordlist <zip_file> <wordlist_file>")
