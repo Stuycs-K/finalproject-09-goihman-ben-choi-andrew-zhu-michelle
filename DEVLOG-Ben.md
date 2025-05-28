@@ -14,3 +14,5 @@ Worked on making the brute force mask attack, so all possible combos not just th
 ### 2025-05-27 - Added testing
 Worked on adding comprehensive testing to the codebase working to make sure we can see if we do any breaking changes - 1 hour
 Make a test zip bomb and test what info we can get from python easily - 20 min.
+### 2025-05-28 - improve detect_bomb and make_bomb
+I improved make_bomb by making it much more aggressive by making 1mb per file instead of only Hello, World! and I also improved detect_bomb removing the overly sensitive check for amount of files. - 30 min

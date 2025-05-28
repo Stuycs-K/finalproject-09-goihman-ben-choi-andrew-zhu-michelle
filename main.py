@@ -3,6 +3,8 @@ import os
 import sys
 import itertools
 import string
+import shutil
+import tempfile
 
 
 def attack(zip_path, wordlist):
@@ -104,13 +106,7 @@ def bomb_detection(zip_path):
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
             files = zip_file.namelist()
-            
-            # check for too many files
-            if len(files) > MAX_FILES:
-                print(f"Too many files, more than {MAX_FILES} files, contains {len(files)} files.")
-                return True
             max_d = 0
-            # check for too many directories
             for file in files:
                 curr_d = file.count('/')
                 max_d = max(curr_d, max_d)
@@ -119,7 +115,7 @@ def bomb_detection(zip_path):
                 return True
             compressed = 0
             uncompressed = 0
-            # check for nested zip files
+            # check for nested files
             for file in zip_file.filelist:
                 if str(file).lower().endswith(".zip"):
                     print("Detected a nested zipfile, potentially harmful")
@@ -131,6 +127,7 @@ def bomb_detection(zip_path):
                 if compression_ratio > MAX_C_RATIO:
                     print(f"Very high compression ratio: exceeds max of {MAX_C_RATIO}, ratio is {compression_ratio}")
                     return True
+        print(zip_file.filelist)
         return False
     except zipfile.BadZipFile:
         print("Bad zip file")
@@ -140,18 +137,25 @@ def bomb_detection(zip_path):
         return False
 
 def make_bomb(zip_path):
-    with zipfile.ZipFile(zip_path, 'w') as zip_file:
+    temp_dir = tempfile.mkdtemp()
+    try:
         for i in range(1000):
-            zip_file.writestr(f'file_{i}.txt', 'Hello, world!')
+            file_path = os.path.join(temp_dir, f'file_{i}.txt')
+            with open(file_path, 'w') as f:
+                f.write('a' * 1000000) # 1MB of 'a' characters per file
+        
+        with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zip_file:
+            for root, dirs, files in os.walk(temp_dir):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    arcname = os.path.relpath(file_path, temp_dir)
+                    zip_file.write(file_path, arcname)
+        
+        print(f"Zip bomb created: {zip_path}")
+        
+    finally:
+        shutil.rmtree(temp_dir)
 
-def make_zip(file_names):
-    binary_files = {}
-    for file in file_names:
-        with open(file, 'rb') as f:
-            binary_files[file] = f.read()
-    print(binary_files[file_names[0]])
-            
-# make_bomb('test_bomb.zip')
 
 def main():
     if len(sys.argv) < 3:
@@ -159,7 +163,7 @@ def main():
         print("       make mask <zip_file> <mask>") 
         print("       make mask <zip_file> <wordlist_file> <mask>")
         print("       make brute <zip_file> <mask>")
-        print("       make bomb <zip_file>")
+        print("       make detect_bomb <zip_file>")
         return 1
     if sys.argv[1] == 'wordlist':
         if len(sys.argv) != 4:
