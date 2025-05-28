@@ -29,3 +29,6 @@ Finished compression ratio testing - 15 mins
 Tested compression ratios with a zip bomb with high ratios - 15 mins
 Tested bomb_detection w/ zip files with lots of files - 10 mins
 
+### 2025-05-28 - Zip maker
+Researched basic zipfile compressions - 10 mins
+Worked on creating a binary reader to find patterns - 15 mins
