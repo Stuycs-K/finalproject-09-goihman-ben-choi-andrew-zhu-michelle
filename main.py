@@ -162,6 +162,7 @@ def make_zip(file_names):
     compressed_size = 0
     original_size = 0
     binary_files = {}
+    all_patterns = {}
     for file in file_names:
         with open(file, 'rb') as f:
             binary_files[file] = f.read()
@@ -186,6 +187,7 @@ def make_zip(file_names):
                 marker = b'\xFF\xFE'
                 flag = marker + pid.to_bytes(2, 'big')
                 new_data = new_data.replace(pattern, flag)
+                all_patterns[pid] = pattern
                 pid+= 1
         compressed_files[file] = bytes(new_data)
         original_size+= len(binary)
@@ -195,7 +197,7 @@ def make_zip(file_names):
     with open('compressed_output.bin', 'wb') as output_file:
         for filename, compressed_data in compressed_files.items():
             output_file.write(compressed_data)
-    
+    save_patterns(all_patterns)
     return compressed_files
 
 def decompress_file(compressed_filename, pattern_dict):
@@ -220,6 +222,28 @@ def decompress_file(compressed_filename, pattern_dict):
             result.append(compressed_data[i])
             i+= 1
     return bytes(result)
+
+def save_patterns(pattern_dict):
+    filename='patterns.bin'
+    with open(filename, 'wb') as f:
+        f.write(len(pattern_dict).to_bytes(4, 'big'))
+        for pattern_id, pattern in pattern_dict.items():
+            f.write(pattern_id.to_bytes(4, 'big'))
+            f.write(len(pattern).to_bytes(4, 'big'))
+            f.write(pattern)
+
+def load_patterns():
+    filename='patterns.bin'
+    patterns = {}
+    with open(filename, 'rb') as f:
+        num_patterns = int.from_bytes(f.read(4), 'big')
+        for _ in range(num_patterns):
+            pattern_id = int.from_bytes(f.read(4), 'big')
+            pattern_len = int.from_bytes(f.read(4), 'big')
+            pattern = f.read(pattern_len)
+            patterns[pattern_id] = pattern
+    
+    return patterns
 
 def main():
     if len(sys.argv) < 3:
@@ -273,6 +297,11 @@ def main():
             print('Usage: make make_zip ARGS="<file1> <file2>...')
             return -1
         make_zip(sys.argv[2:])
+    if sys.argv[1] == 'decompress':
+        if len(sys.argv) != 3:
+            print('Usage: make decompress ARGS="<file.bin>')
+            return -1
+        decompress_file(sys.argv[2], load_patterns())
     return 0
 
 if __name__ == '__main__':

@@ -14,3 +14,6 @@ detect_bomb:
 
 make_zip:
 	@python3 main.py make_zip $(ARGS)
+
+decompress:
+	@python3 main.py decompress $(ARGS)
