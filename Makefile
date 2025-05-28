@@ -11,3 +11,6 @@ make_bomb:
 
 detect_bomb:
 	@python3 main.py detect_bomb $(ARGS)
+
+make_zip:
+	@python3 main.py make_zip $(ARGS)

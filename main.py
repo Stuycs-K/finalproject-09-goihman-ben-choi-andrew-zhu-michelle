@@ -204,6 +204,11 @@ def main():
             print('Usage: make detect_bomb ARGS=<zip_file>')
             return 1
         bomb_detection(sys.argv[2])
+    if sys.argv[1] == 'make_zip':
+        if len(sys.argv) < 3:
+            print('Usage: make make_zip ARGS="<file1> <file2>...')
+            return -1
+        make_zip(sys.argv[2:])
     return 0
 
 if __name__ == '__main__':
