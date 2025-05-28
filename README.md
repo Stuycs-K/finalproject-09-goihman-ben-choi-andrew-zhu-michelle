@@ -53,6 +53,12 @@ The program provides several attack methods through a simple command-line interf
    ```
    Example: `make detect_bomb ARGS="suspicious.zip"`
 
+5. **ZIP Bomb Maker**
+    ```bash
+   make make_bomb ARGS="<zip_file>"
+   ```
+   Example: `make detect_bomb ARGS="suspicious.zip"`
+
 ### Resources & References
 
 - [Python ZIP File Documentation](https://docs.python.org/3/library/zipfile.html)

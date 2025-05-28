@@ -183,7 +183,7 @@ def main():
             print("Usage: make brute <zip_file> <mask>")
             return 1
         brute_mask(sys.argv[2], sys.argv[3])
-    elif sys.argv[1] == 'bomb':
+    elif sys.argv[1] == 'make_bomb':
         if len(sys.argv) != 3:
             print('Usage: make make_bomb ARGS=<zip_file>')
             return 1
