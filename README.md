@@ -61,5 +61,16 @@ The program provides several attack methods through a simple command-line interf
 
 ### Resources & References
 
-- [Python ZIP File Documentation](https://docs.python.org/3/library/zipfile.html)
-- [Understanding ZIP Bombs](https://www.microsoft.com/en-us/windows/learning-center/what-is-a-zip-bomb)
+1. Python Standard Libraries
+- [zipfile](https://docs.python.org/3/library/zipfile.html) - For handling ZIP archive operations
+- [os](https://docs.python.org/3/library/os.html) - For file system operations
+- [sys](https://docs.python.org/3/library/sys.html) - For command-line argument handling
+- [itertools](https://docs.python.org/3/library/itertools.html) - For password generation and combinations
+- [string](https://docs.python.org/3/library/string.html) - For character set operations
+- [subprocess](https://docs.python.org/3/library/subprocess.html) - For running commands in test suite
+- [tempfile](https://docs.python.org/3/library/tempfile.html) - For temporary file operations in testing
+
+2. External Resources
+- [Understanding ZIP Bombs](https://www.microsoft.com/en-us/windows/learning-center/what-is-a-zip-bomb) - For ZIP bomb detection and creation features
+- [GNU Make Manual](https://www.gnu.org/software/make/manual/make.html) - For command-line interface implementation
+- [How to get stdin data](https://stackoverflow.com/questions/3762881/how-do-i-check-if-stdin-has-some-data) - For reading stdin data during execution
