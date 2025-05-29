@@ -73,3 +73,4 @@ The program provides several attack methods through a simple command-line interf
 2. External Resources
 - [Understanding ZIP Bombs](https://www.microsoft.com/en-us/windows/learning-center/what-is-a-zip-bomb) - For ZIP bomb detection and creation features
 - [GNU Make Manual](https://www.gnu.org/software/make/manual/make.html) - For command-line interface implementation
+- [How to get stdin data](https://stackoverflow.com/questions/3762881/how-do-i-check-if-stdin-has-some-data) - For reading stdin data during execution
