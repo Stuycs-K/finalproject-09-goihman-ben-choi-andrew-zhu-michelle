@@ -35,4 +35,6 @@ Worked on creating a binary reader to find patterns - 15 mins
 Worked on basic pattern recognition - 15 mins
 Worked on zip file compression, first read with binary, then basic pattern recognition, and storing flags for the patterns, then writing to a file, lastly attempting to decompress. - 60 mins
 
-### 2025-05-28
+### 2025-05-28 - Decompression
+Worked on decompression - 20 mins
+Debugging why parts of the file is broken - 40 mins
