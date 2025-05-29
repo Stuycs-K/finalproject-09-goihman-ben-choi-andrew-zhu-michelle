@@ -80,11 +80,11 @@ def bomb_detection(zip_path):
 ```
 
 ### Zip bomb maker
-This feature creates a simple zip bomb by generating a ZIP file containing 1000 small text files. While this is a basic example, it demonstrates how zip bombs can be created.
+This feature creates a simple zip bomb by generating a ZIP file containing 1000 small text files. While this is a basic example, it demonstrates how zip bombs can be created. It writes 1000 files, each containing 1MB of 'a' characters.
 
 ```python
 def make_bomb(zip_path):
     with zipfile.ZipFile(zip_path, 'w') as zip_file:
         for i in range(1000):
-            zip_file.writestr(f'file_{i}.txt', 'Hello, world!')
+            zip_file.writestr(f'file_{i}.txt', 'a'*1000000)
 ```
