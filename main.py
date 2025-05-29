@@ -5,7 +5,20 @@ import itertools
 import string
 import shutil
 import tempfile
+import select
+import json
 
+def save_progress(zip_path, wordlist_path, line_num):
+    with open("where.txt", "w") as f:
+        f.write(f"{zip_path}\n{wordlist_path}\n{line_num}\n")
+
+def load_progress():
+    if os.path.exists("where.txt"):
+        with open("where.txt", "r") as f:
+            lines = f.read().strip().split('\n')
+            if len(lines) == 3:
+                return lines[0], lines[1], int(lines[2])
+    return None, None, 0
 
 def attack(zip_path, wordlist):
     try:
@@ -91,12 +104,50 @@ def mask_attack(zip_path, wordlist_path, mask):
         return attack(zip_path, wordlist)
 
 
-def dict_attack(zip_path, wordlist_path):
+def dict_attack(zip_path, wordlist_path, start_line=0):
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
         return None
-    with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
-        return attack(zip_path, wordlist)
+    
+    try:
+        with zipfile.ZipFile(zip_path) as zip_file:
+            with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as f:
+                lines = f.readlines()
+                
+            for i in range(start_line, len(lines)):
+                password = lines[i].strip()
+                if not password:
+                    continue
+                
+                # Check if user pressed 'q'
+                if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                    key = sys.stdin.read(1)
+                    print(f"Key pressed: {key}")
+                    if key.lower() == 'q':
+                        save_progress(zip_path, wordlist_path, i)
+                        print(f"Saved progress at line {i}")
+                        return None
+                
+                try:
+                    zip_file.extractall(pwd=password.encode())
+                    print(f"Password found: {password}")
+                    if os.path.exists("where.txt"):
+                        os.remove("where.txt")
+                    return password
+                except:
+                    continue
+
+            print("Password not found in wordlist")
+            if os.path.exists("where.txt"):
+                os.remove("where.txt")
+            return None
+
+    except zipfile.BadZipFile:
+        print("Error: Invalid zip file")
+        return None
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return None
 
 
 def bomb_detection(zip_path):
@@ -246,28 +297,34 @@ def load_patterns():
     return patterns
 
 def main():
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         print("Usage: make wordlist <zip_file> <wordlist_file>")
-        print("       make mask <zip_file> <mask>") 
+        print("       make wordlist <zip_file> <wordlist_file> cont")
         print("       make mask <zip_file> <wordlist_file> <mask>")
         print("       make brute <zip_file> <mask>")
         print("       make detect_bomb <zip_file>")
         return 1
+    
     if sys.argv[1] == 'wordlist':
-        if len(sys.argv) != 4:
-            print("Usage: make wordlist ARGS=<zip_file> <wordlist_file>")
+        if len(sys.argv) < 4:
+            print("Usage: make wordlist <zip_file> <wordlist_file> [cont]")
             return 1
-        dict_attack(sys.argv[2], sys.argv[3])
-    if sys.argv[1] == 'mask':
-        if len(sys.argv) != 5:
-            print("Usage: make mask ARGS=<zip_file> <wordlist_file> <mask>")
-            return 1
-        mask_attack(sys.argv[2], sys.argv[4], sys.argv[3])
-    if sys.argv[1] == 'make_bomb':
-        if len(sys.argv) != 3:
-            print("Usage: make make_bomb ARGS=<zip_file>")
-            return 1
-        make_bomb(sys.argv[2])
+        
+        zip_file = sys.argv[2]
+        wordlist_file = sys.argv[3]
+        start_line = 0
+        
+        # Check if continuing from saved progress
+        if len(sys.argv) == 5 and sys.argv[4] == 'cont':
+            saved_zip, saved_wordlist, saved_line = load_progress()
+            if saved_zip == zip_file and saved_wordlist == wordlist_file:
+                start_line = saved_line
+                print(f"Continuing from line {start_line}")
+            else:
+                print("No matching progress found, starting from beginning")
+        
+        dict_attack(zip_file, wordlist_file, start_line)
+        
     elif sys.argv[1] == 'mask':
         if len(sys.argv) == 4:
             brute_mask(sys.argv[2], sys.argv[3])
@@ -284,22 +341,22 @@ def main():
         brute_mask(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'make_bomb':
         if len(sys.argv) != 3:
-            print('Usage: make make_bomb ARGS=<zip_file>')
+            print('Usage: make make_bomb <zip_file>')
             return 1
         make_bomb(sys.argv[2])
-    if sys.argv[1] == 'detect_bomb':
+    elif sys.argv[1] == 'detect_bomb':
         if len(sys.argv) != 3:
-            print('Usage: make detect_bomb ARGS=<zip_file>')
+            print('Usage: make detect_bomb <zip_file>')
             return 1
         bomb_detection(sys.argv[2])
-    if sys.argv[1] == 'make_zip':
+    elif sys.argv[1] == 'make_zip':
         if len(sys.argv) < 3:
-            print('Usage: make make_zip ARGS="<file1> <file2>...')
+            print('Usage: make make_zip <file1> <file2>...')
             return -1
         make_zip(sys.argv[2:])
-    if sys.argv[1] == 'decompress':
+    elif sys.argv[1] == 'decompress':
         if len(sys.argv) != 3:
-            print('Usage: make decompress ARGS="<file.bin>')
+            print('Usage: make decompress <file.bin>')
             return -1
         decompress_file(sys.argv[2], load_patterns())
     return 0

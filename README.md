@@ -63,3 +63,4 @@ The program provides several attack methods through a simple command-line interf
 
 - [Python ZIP File Documentation](https://docs.python.org/3/library/zipfile.html)
 - [Understanding ZIP Bombs](https://www.microsoft.com/en-us/windows/learning-center/what-is-a-zip-bomb)
+- [How to get stdin data](https://stackoverflow.com/questions/3762881/how-do-i-check-if-stdin-has-some-data)
