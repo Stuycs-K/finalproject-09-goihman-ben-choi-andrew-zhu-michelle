@@ -163,10 +163,11 @@ def make_zip(file_names):
     original_size = 0
     binary_files = {}
     all_patterns = {}
+    file_metadata = {}
+    compressed_files = {}
     for file in file_names:
         with open(file, 'rb') as f:
-            binary_files[file] = f.read()
-    compressed_files = {}
+            binary_files[file] = f.read()    
     for file, binary in binary_files.items():
         patterns = {}
         for sequence_len in range(MIN_PATTERN, min(MAX_PATTERN, len(binary))):
@@ -190,11 +191,20 @@ def make_zip(file_names):
                 all_patterns[pid] = pattern
                 pid+= 1
         compressed_files[file] = bytes(new_data)
+        file_metadata[file] = len(new_data)
         original_size+= len(binary)
         compressed_size+= len(new_data)
     print(f'Original size: {original_size}')
-    print(f'Compressed size: {compressed_size}')    
+    print(f'Compressed size: {compressed_size}')
+    header_marker = b'\xFF\xFE\xFD\xFC'    
     with open('compressed_output.bin', 'wb') as output_file:
+        # create a header to decompress later back into the original files
+        output_file.write(len(compressed_files).to_bytes(4, 'big')) # write num of files first
+        for filename, compressed_data in compressed_files.items():
+            output_file.write(len(filename.encode('utf-8')).to_bytes(2, 'big'))
+            output_file.write(filename.encode('utf-8'))
+            output_file.write(file_metadata[filename].to_bytes(4, 'big'))
+        output_file.write(header_marker)
         for filename, compressed_data in compressed_files.items():
             output_file.write(compressed_data)
     save_patterns(all_patterns)
@@ -202,33 +212,50 @@ def make_zip(file_names):
 
 def decompress_file(compressed_filename, pattern_dict):
     with open(compressed_filename, 'rb') as f:
+        file_count = int.from_bytes(f.read(4), 'big')
+        file_info = []
+        # get file count, then for each file read the length of name, filename, and filesize
+        for i in range(file_count):
+            name_len = int.from_bytes(f.read(2), 'big')
+            filename = f.read(name_len).decode('utf-8')
+            file_size = int.from_bytes(f.read(4), 'big')
+            file_info.append((filename, file_size))
+        sep = f.read(4)
         compressed_data = f.read()
     
-    result = bytearray()
-    i = 0
-    marker = b'\xFF\xFE'
+    offset = 0
+    for fname, fsize in file_info:
+        file_data = compressed_data[offset:offset + fsize]
     
-    while i < len(compressed_data):
-        if i + 1 < len(compressed_data) and compressed_data[i:i+2] == marker:
-            if i + 3 < len(compressed_data):
-                pattern_id = int.from_bytes(compressed_data[i+2:i+4], 'big')
-                if pattern_id in pattern_dict:
-                    result.extend(pattern_dict[pattern_id])
-                i+= 4 
+        result = bytearray()
+        i = 0
+        marker = b'\xFF\xFE'   
+        while i < len(compressed_data):
+            if i + 1 < len(compressed_data) and compressed_data[i:i+2] == marker:
+                if i + 3 < len(compressed_data):
+                    pattern_id = int.from_bytes(compressed_data[i+2:i+4], 'big')
+                    if pattern_id in pattern_dict:
+                        result.extend(pattern_dict[pattern_id])
+                    i+= 4 
+                else:
+                    result.append(compressed_data[i])
+                    i+= 1
             else:
                 result.append(compressed_data[i])
                 i+= 1
-        else:
-            result.append(compressed_data[i])
-            i+= 1
-    return bytes(result)
+        with open(fname, 'wb') as out_f:
+            out_f.write(bytes(result))
+        
+        offset += file_size
+        print(f'Decompressed: {fname}')
+
 
 def save_patterns(pattern_dict):
     filename='patterns.bin'
     with open(filename, 'wb') as f:
         f.write(len(pattern_dict).to_bytes(4, 'big'))
-        for pattern_id, pattern in pattern_dict.items():
-            f.write(pattern_id.to_bytes(4, 'big'))
+        for p_id, pattern in pattern_dict.items():
+            f.write(p_id.to_bytes(4, 'big'))
             f.write(len(pattern).to_bytes(4, 'big'))
             f.write(pattern)
 
@@ -238,11 +265,10 @@ def load_patterns():
     with open(filename, 'rb') as f:
         num_patterns = int.from_bytes(f.read(4), 'big')
         for _ in range(num_patterns):
-            pattern_id = int.from_bytes(f.read(4), 'big')
-            pattern_len = int.from_bytes(f.read(4), 'big')
-            pattern = f.read(pattern_len)
-            patterns[pattern_id] = pattern
-    
+            p_id = int.from_bytes(f.read(4), 'big')
+            p_len = int.from_bytes(f.read(4), 'big')
+            pattern = f.read(p_len)
+            patterns[p_id] = pattern   
     return patterns
 
 def main():
