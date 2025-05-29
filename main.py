@@ -208,56 +208,73 @@ def make_bomb(zip_path):
         shutil.rmtree(temp_dir)
 
 def make_zip(file_names):
-    MIN_PATTERN = 4
+    MIN_PATTERN = 5
     MAX_PATTERN = 100
     compressed_size = 0
     original_size = 0
     binary_files = {}
     all_patterns = {}
     file_metadata = {}
-    compressed_files = {}
+    compressed_files = {}   
     for file in file_names:
         with open(file, 'rb') as f:
-            binary_files[file] = f.read()    
+            binary_files[file] = f.read()
+    
+    global_patterns = {}
     for file, binary in binary_files.items():
-        patterns = {}
-        for sequence_len in range(MIN_PATTERN, min(MAX_PATTERN, len(binary))):
+        for sequence_len in range(MIN_PATTERN, min(MAX_PATTERN, len(binary) + 1)):
             for i in range(len(binary) - sequence_len + 1):
                 pattern = binary[i:i+sequence_len]
-                if pattern in patterns:
-                    patterns[pattern].append(i)
-                else:
-                    patterns[pattern] = [i]
-        best_patterns = {}
-        for pattern, pos in patterns.items():
-            if len(pos) > 1: # >1 pattern occurs
-                best_patterns[pattern] = pos
-        new_data = bytearray(binary)
-        pid = 0
-        for pattern in best_patterns:
-            if len(pattern) > MIN_PATTERN:
-                marker = b'\xFF\xFE'
-                flag = marker + pid.to_bytes(2, 'big')
-                new_data = new_data.replace(pattern, flag)
-                all_patterns[pid] = pattern
-                pid+= 1
-        compressed_files[file] = bytes(new_data)
+                if pattern not in global_patterns:
+                    global_patterns[pattern] = []
+                global_patterns[pattern].append((file, i))
+    
+    selected_patterns = {}
+    pid = 0
+    for pattern, occurrences in global_patterns.items():
+        total_occurrences = len(occurrences)
+        pattern_length = len(pattern)
+        space_saved = (total_occurrences * pattern_length) - (total_occurrences * 4) - pattern_length
+        
+        if space_saved > 0 and total_occurrences > 1:
+            selected_patterns[pattern] = pid
+            all_patterns[pid] = pattern
+            pid += 1
+            if pid >= 65536:
+                break
+    
+    for file, binary in binary_files.items():
+        new_data = binary
+        
+        sorted_patterns = sorted(selected_patterns.items(), key=lambda x: len(x[0]), reverse=True)
+        
+        for pattern, pattern_id in sorted_patterns:
+            marker = b'\xFF\xFE'
+            flag = marker + pattern_id.to_bytes(2, 'big')
+            new_data = new_data.replace(pattern, flag)
+        
+        compressed_files[file] = new_data
         file_metadata[file] = len(new_data)
-        original_size+= len(binary)
-        compressed_size+= len(new_data)
+        original_size += len(binary)
+        compressed_size += len(new_data)
+    
     print(f'Original size: {original_size}')
     print(f'Compressed size: {compressed_size}')
-    header_marker = b'\xFF\xFE\xFD\xFC'    
+    print(f'Compression ratio: {compressed_size/original_size:.2%}')
+    print(f'Patterns used: {len(all_patterns)}')
+    
+    header_marker = b'\xFF\xFE\xFD\xFC'
     with open('compressed_output.bin', 'wb') as output_file:
-        # create a header to decompress later back into the original files
-        output_file.write(len(compressed_files).to_bytes(4, 'big')) # write num of files first
+        output_file.write(len(compressed_files).to_bytes(4, 'big'))
         for filename, compressed_data in compressed_files.items():
             output_file.write(len(filename.encode('utf-8')).to_bytes(2, 'big'))
             output_file.write(filename.encode('utf-8'))
             output_file.write(file_metadata[filename].to_bytes(4, 'big'))
         output_file.write(header_marker)
+        
         for filename, compressed_data in compressed_files.items():
             output_file.write(compressed_data)
+    
     save_patterns(all_patterns)
     return compressed_files
 
@@ -281,23 +298,24 @@ def decompress_file(compressed_filename, pattern_dict):
         result = bytearray()
         i = 0
         marker = b'\xFF\xFE'   
-        while i < len(compressed_data):
-            if i + 1 < len(compressed_data) and compressed_data[i:i+2] == marker:
-                if i + 3 < len(compressed_data):
-                    pattern_id = int.from_bytes(compressed_data[i+2:i+4], 'big')
+        while i < len(file_data): 
+            if i + 1 < len(file_data) and file_data[i:i+2] == marker: 
+                if i + 3 < len(file_data):
+                    pattern_id = int.from_bytes(file_data[i+2:i+4], 'big')
                     if pattern_id in pattern_dict:
                         result.extend(pattern_dict[pattern_id])
-                    i+= 4 
+                    i += 4 
                 else:
-                    result.append(compressed_data[i])
-                    i+= 1
+                    result.append(file_data[i])
+                    i += 1
             else:
-                result.append(compressed_data[i])
-                i+= 1
+                result.append(file_data[i])
+                i += 1
+        
         with open(fname, 'wb') as out_f:
             out_f.write(bytes(result))
         
-        offset += file_size
+        offset += fsize
         print(f'Decompressed: {fname}')
 
 
@@ -306,7 +324,7 @@ def save_patterns(pattern_dict):
     with open(filename, 'wb') as f:
         f.write(len(pattern_dict).to_bytes(4, 'big'))
         for p_id, pattern in pattern_dict.items():
-            f.write(p_id.to_bytes(4, 'big'))
+            f.write(p_id.to_bytes(2, 'big'))
             f.write(len(pattern).to_bytes(4, 'big'))
             f.write(pattern)
 
