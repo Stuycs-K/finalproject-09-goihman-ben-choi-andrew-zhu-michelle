@@ -334,7 +334,7 @@ def load_patterns():
     with open(filename, 'rb') as f:
         num_patterns = int.from_bytes(f.read(4), 'big')
         for _ in range(num_patterns):
-            p_id = int.from_bytes(f.read(4), 'big')
+            p_id = int.from_bytes(f.read(2), 'big')
             p_len = int.from_bytes(f.read(4), 'big')
             pattern = f.read(p_len)
             patterns[p_id] = pattern   
