@@ -24,6 +24,8 @@ Left helpful comments - 5 min
 ### 2025-05-28 - Worked on PRESENTATION.md
 Worked on PRESENTATION.md - 60 min
 
-### 2025-05-29 - Wokred on README.md
+### 2025-05-29 - Wokred on README.md & helped with decompress_file
 Cited libraries in README.md - 20 min
-Helped decompress files - 20 min
+Helped build decompress_file - 20 min
+
+### 2025-05-30 - 
