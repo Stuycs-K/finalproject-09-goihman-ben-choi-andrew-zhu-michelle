@@ -21,10 +21,9 @@ Revised README.md - 20 min
 Developed make__bomb algorithm - 20 min
 Left helpful comments - 5 min
 
-<<<<<<< HEAD
-### 2025-05-27 - Worked on presentation.md
-Worked on presentation.md
-=======
-### 2025-05-27 - Presentation
-Worked on slides
->>>>>>> 8e13d07b5ab462dc1eb89d23d2a14a77aea05728
+### 2025-05-28 - Worked on PRESENTATION.md
+Worked on PRESENTATION.md - 60 min
+
+### 2025-05-29 - Wokred on README.md
+Cited libraries in README.md - 20 min
+Helped decompress files - 20 min
