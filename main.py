@@ -347,6 +347,8 @@ def main():
         print("       make mask <zip_file> <wordlist_file> <mask>")
         print("       make brute <zip_file> <mask>")
         print("       make detect_bomb <zip_file>")
+        print("       make make_zip <file1> <file2>...")
+        print("       make decompress <file.bin>")
         return 1
     
     if sys.argv[1] == 'wordlist':
