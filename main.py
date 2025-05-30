@@ -56,7 +56,19 @@ def matches_mask(word, mask):
     return True
 
 
-def brute_mask(zip_path, mask):
+def save_brute_progress(zip_path, mask, combination_index):
+    with open("brute_where.txt", "w") as f:
+        f.write(f"{zip_path}\n{mask}\n{combination_index}\n")
+
+def load_brute_progress():
+    if os.path.exists("brute_where.txt"):
+        with open("brute_where.txt", "r") as f:
+            lines = f.read().strip().split('\n')
+            if len(lines) == 3:
+                return lines[0], lines[1], int(lines[2])
+    return None, None, 0
+
+def brute_mask(zip_path, mask, start_index=0):
     unknown_positions = [i for i, char in enumerate(mask) if char == '_']
     
     if not unknown_positions:
@@ -70,20 +82,40 @@ def brute_mask(zip_path, mask):
             return None
 
         with zipfile.ZipFile(zip_path) as zip_file:
+            combination_index = 0
             for combination in itertools.product(charset, repeat=len(unknown_positions)):
+                if combination_index < start_index:
+                    combination_index += 1
+                    continue
+                    
                 password = list(mask)
                 for i, char in enumerate(combination):
                     password[unknown_positions[i]] = char
                 password = ''.join(password)
                 
+                # Check if user pressed 'q'
+                if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                    key = sys.stdin.read(1)
+                    print(f"Key pressed: {key}")
+                    if key.lower() == 'q':
+                        save_brute_progress(zip_path, mask, combination_index)
+                        print(f"Saved brute force progress at combination {combination_index}")
+                        return None
+                
                 try:
                     zip_file.extractall(pwd=password.encode())
                     print(f"Password found: {password}")
+                    if os.path.exists("brute_where.txt"):
+                        os.remove("brute_where.txt")
                     return password
                 except:
-                    continue
+                    pass
+                
+                combination_index += 1
             
             print("Password not found in brute force attack")
+            if os.path.exists("brute_where.txt"):
+                os.remove("brute_where.txt")
             return None
 
     except zipfile.BadZipFile:
@@ -94,14 +126,56 @@ def brute_mask(zip_path, mask):
         return None
 
 
-def mask_attack(zip_path, wordlist_path, mask):
+def mask_attack(zip_path, wordlist_path, mask, start_line=0):
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
         return None
-    with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
-        wordlist = [word for word in wordlist if matches_mask(
-            word.strip(), mask)]
-        return attack(zip_path, wordlist)
+    
+    try:
+        with zipfile.ZipFile(zip_path) as zip_file:
+            with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as f:
+                lines = f.readlines()
+            
+            matching_words = []
+            for i, word in enumerate(lines):
+                if i < start_line:
+                    continue
+                if matches_mask(word.strip(), mask):
+                    matching_words.append((i, word.strip()))
+            
+            for line_num, password in matching_words:
+                if not password:
+                    continue
+                
+                # Check if user pressed 'q'
+                if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+                    key = sys.stdin.read(1)
+                    print(f"Key pressed: {key}")
+                    if key.lower() == 'q':
+                        save_progress(zip_path, wordlist_path, line_num)
+                        print(f"Saved progress at line {line_num}")
+                        return None
+                
+                try:
+                    zip_file.extractall(pwd=password.encode())
+                    print(f"Password found: {password}")
+                    if os.path.exists("where.txt"):
+                        os.remove("where.txt")
+                    return password
+                except:
+                    continue
+            
+            print("Password not found in mask attack")
+            if os.path.exists("where.txt"):
+                os.remove("where.txt")
+            return None
+
+    except zipfile.BadZipFile:
+        print("Error: Invalid zip file")
+        return None
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return None
 
 
 def dict_attack(zip_path, wordlist_path, start_line=0):
@@ -345,7 +419,9 @@ def main():
         print("Usage: make wordlist <zip_file> <wordlist_file>")
         print("       make wordlist <zip_file> <wordlist_file> cont")
         print("       make mask <zip_file> <wordlist_file> <mask>")
+        print("       make mask <zip_file> <wordlist_file> <mask> cont")
         print("       make brute <zip_file> <mask>")
+        print("       make brute <zip_file> <mask> cont")
         print("       make detect_bomb <zip_file>")
         return 1
     
@@ -358,7 +434,6 @@ def main():
         wordlist_file = sys.argv[3]
         start_line = 0
         
-        # Check if continuing from saved progress
         if len(sys.argv) == 5 and sys.argv[4] == 'cont':
             saved_zip, saved_wordlist, saved_line = load_progress()
             if saved_zip == zip_file and saved_wordlist == wordlist_file:
@@ -373,16 +448,68 @@ def main():
         if len(sys.argv) == 4:
             brute_mask(sys.argv[2], sys.argv[3])
         elif len(sys.argv) == 5:
-            mask_attack(sys.argv[2], sys.argv[3], sys.argv[4])
+            if sys.argv[4] == 'cont':
+                zip_file = sys.argv[2]
+                mask = sys.argv[3]
+                start_index = 0
+                
+                saved_zip, saved_mask, saved_index = load_brute_progress()
+                if saved_zip == zip_file and saved_mask == mask:
+                    start_index = saved_index
+                    print(f"Continuing brute force from combination {start_index}")
+                else:
+                    print("No matching brute force progress found, starting from beginning")
+                
+                brute_mask(zip_file, mask, start_index)
+            else:
+                mask_attack(sys.argv[2], sys.argv[3], sys.argv[4])
+        elif len(sys.argv) == 6:
+            if sys.argv[5] == 'cont':
+                zip_file = sys.argv[2]
+                wordlist_file = sys.argv[3] 
+                mask = sys.argv[4]
+                start_line = 0
+                
+                saved_zip, saved_wordlist, saved_line = load_progress()
+                if saved_zip == zip_file and saved_wordlist == wordlist_file:
+                    start_line = saved_line
+                    print(f"Continuing mask attack from line {start_line}")
+                else:
+                    print("No matching progress found, starting from beginning")
+                
+                mask_attack(zip_file, wordlist_file, mask, start_line)
+            else:
+                print("Usage: make mask <zip_file> <mask>")
+                print("   or: make mask <zip_file> <wordlist_file> <mask>") 
+                print("   or: make mask <zip_file> <wordlist_file> <mask> cont")
+                return 1
         else:
             print("Usage: make mask <zip_file> <mask>")
+            print("   or: make mask <zip_file> <mask> cont")
             print("   or: make mask <zip_file> <wordlist_file> <mask>")
+            print("   or: make mask <zip_file> <wordlist_file> <mask> cont")
             return 1
     elif sys.argv[1] == 'brute':
-        if len(sys.argv) != 4:
+        if len(sys.argv) == 4:
+            brute_mask(sys.argv[2], sys.argv[3])
+        elif len(sys.argv) == 5 and sys.argv[4] == 'cont':
+            zip_file = sys.argv[2]
+            mask = sys.argv[3]
+            start_index = 0
+            
+            # Check if continuing from saved progress
+            saved_zip, saved_mask, saved_index = load_brute_progress()
+            if saved_zip == zip_file and saved_mask == mask:
+                start_index = saved_index
+                print(f"Continuing brute force from combination {start_index}")
+            else:
+                print("No matching brute force progress found, starting from beginning")
+            
+            brute_mask(zip_file, mask, start_index)
+        else:
             print("Usage: make brute <zip_file> <mask>")
+            print("   or: make brute <zip_file> <mask> cont")
             return 1
-        brute_mask(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'make_bomb':
         if len(sys.argv) != 3:
             print('Usage: make make_bomb <zip_file>')
