@@ -281,6 +281,10 @@ def make_bomb(zip_path):
         shutil.rmtree(temp_dir)
 
 def make_zip(file_names):
+    if not file_names:
+        print("No input files provided")
+        return None
+        
     MIN_PATTERN = 5
     MAX_PATTERN = 100
     compressed_size = 0
@@ -289,6 +293,7 @@ def make_zip(file_names):
     all_patterns = {}
     file_metadata = {}
     compressed_files = {}   
+
     for file in file_names:
         with open(file, 'rb') as f:
             binary_files[file] = f.read()
@@ -313,7 +318,7 @@ def make_zip(file_names):
             selected_patterns[pattern] = pid
             all_patterns[pid] = pattern
             pid += 1
-            if pid >= 65536:
+            if pid >= 65536:  # Maximum number of patterns (2^16)
                 break
     
     for file, binary in binary_files.items():

@@ -33,3 +33,7 @@ Debugged decompress with Andrew - 20 min
 Added make_zip and decompress_file to main() in main.py - 2 min
 Tested make_zip and decompress_file - 5 min
 Revised README.md and PRESENTATION.md to include make_zip and decompress_file - 30 min
+
+### 2025-06-02 - Final check & video breakdown
+Tested every function & ensured functionality - 20 min
+Planned video breakdown - 20 min
