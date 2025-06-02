@@ -39,4 +39,5 @@ Worked on zip file compression, first read with binary, then basic pattern recog
 Worked on decompression - 20 mins
 Debugging why parts of the file is broken - 40 mins
 
-### 2025-06-02 - Update Reeadme instructions
+### 2025-06-02 - Cleanup
+Worked on cleaning up code and adding comments for presentation - 30 mins

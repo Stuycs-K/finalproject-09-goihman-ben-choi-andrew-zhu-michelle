@@ -286,13 +286,13 @@ def make_zip(file_names):
     MAX_PATTERN = 100
     compressed_size = 0
     original_size = 0
-    binary_files = {}
-    all_patterns = {}
-    file_metadata = {}
-    compressed_files = {}   
+    binary_files = {} # store all of the files in binary with the key being file name
+    all_patterns = {} # store every pattern found
+    file_sizes = {} # store file sizes to write to the binary, used for decompressing
+    compressed_files = {} # store the binaries for each file (compressed)
     for file in file_names:
         with open(file, 'rb') as f:
-            binary_files[file] = f.read()
+            binary_files[file] = f.read() # store as binary
     
     global_patterns = {}
     for file, binary in binary_files.items():
@@ -301,17 +301,17 @@ def make_zip(file_names):
                 pattern = binary[i:i+sequence_len]
                 if pattern not in global_patterns:
                     global_patterns[pattern] = []
-                global_patterns[pattern].append((file, i))
+                global_patterns[pattern].append((file, i)) # store the file name and the position for the pattern
     
-    selected_patterns = {}
-    pid = 0
+    selected_patterns = {} # patterns used for compression later
+    pid = 0 # counter
     for pattern, occurrences in global_patterns.items():
         total_occurrences = len(occurrences)
         pattern_length = len(pattern)
         space_saved = (total_occurrences * pattern_length) - (total_occurrences * 4) - pattern_length
         
         if space_saved > 0 and total_occurrences > 1:
-            selected_patterns[pattern] = pid
+            selected_patterns[pattern] = pid # assign a pattern id to a pattern if it saces space
             all_patterns[pid] = pattern
             pid += 1
             if pid >= 65536:
@@ -323,12 +323,12 @@ def make_zip(file_names):
         sorted_patterns = sorted(selected_patterns.items(), key=lambda x: len(x[0]), reverse=True)
         
         for pattern, pattern_id in sorted_patterns:
-            marker = b'\xFF\xFE'
+            marker = b'\xFF\xFE' # marker for compressed patterns, acts like a flag 
             flag = marker + pattern_id.to_bytes(2, 'big')
             new_data = new_data.replace(pattern, flag)
         
-        compressed_files[file] = new_data
-        file_metadata[file] = len(new_data)
+        compressed_files[file] = new_data # store compressed result
+        file_sizes[file] = len(new_data)
         original_size += len(binary)
         compressed_size += len(new_data)
     
@@ -337,19 +337,19 @@ def make_zip(file_names):
     print(f'Compression ratio: {compressed_size/original_size:.2%}')
     print(f'Patterns used: {len(all_patterns)}')
     
-    header_marker = b'\xFF\xFE\xFD\xFC'
+    header_marker = b'\xFF\xFE\xFD\xFC' # marker for header data
     with open('compressed_output.bin', 'wb') as output_file:
-        output_file.write(len(compressed_files).to_bytes(4, 'big'))
+        output_file.write(len(compressed_files).to_bytes(4, 'big')) # write No. of files
         for filename, compressed_data in compressed_files.items():
-            output_file.write(len(filename.encode('utf-8')).to_bytes(2, 'big'))
-            output_file.write(filename.encode('utf-8'))
-            output_file.write(file_metadata[filename].to_bytes(4, 'big'))
-        output_file.write(header_marker)
+            output_file.write(len(filename.encode('utf-8')).to_bytes(2, 'big')) # file length
+            output_file.write(filename.encode('utf-8')) # filename
+            output_file.write(file_sizes[filename].to_bytes(4, 'big')) # size
+        output_file.write(header_marker) # write the separator
         
         for filename, compressed_data in compressed_files.items():
             output_file.write(compressed_data)
     
-    save_patterns(all_patterns)
+    save_patterns(all_patterns) # save pattern dictionary, used when decompressing
     return compressed_files
 
 def decompress_file(compressed_filename, pattern_dict):
