@@ -226,7 +226,6 @@ def dict_attack(zip_path, wordlist_path, start_line=0):
 
 def bomb_detection(zip_path):
     MAX_C_RATIO = 50
-    MAX_FILES = 100
     MAX_DEPTH = 5
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
@@ -424,6 +423,7 @@ def main():
         print("       make brute <zip_file> <mask> cont")
         print("       make detect_bomb <zip_file>")
         print("       make make_zip <file1> <file2>...")
+        print("       make make_encrypted_zip <zip_file> <password> <file1> <file2>...")
         print("       make decompress <file.bin>")
         return 1
     

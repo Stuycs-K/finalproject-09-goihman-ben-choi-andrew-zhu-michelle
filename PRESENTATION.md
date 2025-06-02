@@ -29,7 +29,7 @@ def dict_attack(zip_path, wordlist_path):
 ```
 
 ### Mask attack with wordlist
-This feature combines a wordlist with a mask pattern. The mask uses '_' as a wildcard character, and only passwords from the wordlist that match the mask pattern are tried. For example, if the mask is "pass___", it will only try passwords from the wordlist that start with "pass" followed by any three characters.
+This feature combines a wordlist with a mask pattern. The mask uses '_' as a wildcard character, and only passwords from the wordlist that match the mask pattern are tried. For example, if the mask is "pass___", it will only try passwords from the wordlist that start with "pass" followed by any three characters. To do this it first makes a wordlist of valid passwords from the wordlist that match the mask pattern, than does the same dictionary attack just with the new wordlist.
 
 ```python
 def mask_attack(zip_path, wordlist_path, mask):
@@ -42,7 +42,7 @@ def mask_attack(zip_path, wordlist_path, mask):
 ```
 
 ### Brute force mask attack
-This feature performs a brute force attack using a mask pattern. For each '_' in the mask, it tries all possible characters (letters and numbers) in that position. This is useful when you know part of the password but need to guess the rest.
+This feature performs a brute force attack using a mask pattern. For each '_' in the mask, it tries all possible characters (letters and numbers) in that position. This is useful when you know part of the password but need to guess the rest. This makes it slower than the normal mask attach but when only missing a few characters it can be worth the trade off.
 
 ```python
 def brute_mask(zip_path, mask):
@@ -60,7 +60,6 @@ def brute_mask(zip_path, mask):
 
 ### Zip bomb detection
 This feature analyzes a ZIP file for potential zip bomb characteristics by checking:
-- Number of files (max 100)
 - Directory depth (max 5 levels)
 - Compression ratio (max 50:1)
 - Presence of nested ZIP files
@@ -68,15 +67,26 @@ This feature analyzes a ZIP file for potential zip bomb characteristics by check
 ```python
 def bomb_detection(zip_path):
     MAX_C_RATIO = 50
-    MAX_FILES = 100
     MAX_DEPTH = 5
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
             files = zip_file.namelist()
-            # Check file count, depth, and compression ratio
-            if len(files) > MAX_FILES:
+            
+            # Check directory depth
+            max_d = 0
+            for file in files:
+                curr_d = file.count('/')
+                max_d = max(curr_d, max_d)
+            if max_d > MAX_DEPTH:
+                print(f"Exceeded max depth of {MAX_DEPTH}, currently has a max depth of {max_d}")
                 return True
-            # Additional checks for depth and compression...
+            
+            # Check compression ratio and nested zip files
+        
+        return False
+    except zipfile.BadZipFile:
+        print("Bad zip file")
+        return False
 ```
 
 ### Zip bomb maker
