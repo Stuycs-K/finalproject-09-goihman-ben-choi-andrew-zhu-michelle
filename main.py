@@ -366,21 +366,23 @@ def decompress_file(compressed_filename, pattern_dict):
             file_size = int.from_bytes(f.read(4), 'big')
             file_info.append((filename, file_size))
         sep = f.read(4)
+        # read the marker
         compressed_data = f.read()
     
     offset = 0
     for fname, fsize in file_info:
+        # get the data for the current file
         file_data = compressed_data[offset:offset + fsize]
     
         result = bytearray()
         i = 0
         marker = b'\xFF\xFE'   
         while i < len(file_data): 
-            if i + 1 < len(file_data) and file_data[i:i+2] == marker: 
+            if i + 1 < len(file_data) and file_data[i:i+2] == marker: # if encounters a marker
                 if i + 3 < len(file_data):
-                    pattern_id = int.from_bytes(file_data[i+2:i+4], 'big')
+                    pattern_id = int.from_bytes(file_data[i+2:i+4], 'big') # read the pattern id
                     if pattern_id in pattern_dict:
-                        result.extend(pattern_dict[pattern_id])
+                        result.extend(pattern_dict[pattern_id]) # replace the pattern
                     i += 4 
                 else:
                     result.append(file_data[i])
