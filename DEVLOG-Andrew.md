@@ -38,3 +38,5 @@ Worked on zip file compression, first read with binary, then basic pattern recog
 ### 2025-05-28 - Decompression
 Worked on decompression - 20 mins
 Debugging why parts of the file is broken - 40 mins
+
+### 2025-06-02 - Update Reeadme instructions

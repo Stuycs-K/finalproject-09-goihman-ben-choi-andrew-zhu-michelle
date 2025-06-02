@@ -74,6 +74,7 @@ The program provides several attack methods through a simple command-line interf
    ```
    Example: `make decompress ARGS="compressed_output.bin"`
    Note: Requires `patterns.bin` to be present in the same directory
+   Note: The default output for this is compressed_output.bin, so the argument should always be compressed_output.bin unless the name is changed.
 
 ### Resources & References
 
