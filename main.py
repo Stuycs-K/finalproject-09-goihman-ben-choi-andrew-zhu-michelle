@@ -226,7 +226,6 @@ def dict_attack(zip_path, wordlist_path, start_line=0):
 
 def bomb_detection(zip_path):
     MAX_C_RATIO = 50
-    MAX_FILES = 100
     MAX_DEPTH = 5
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_file:
@@ -282,6 +281,10 @@ def make_bomb(zip_path):
         shutil.rmtree(temp_dir)
 
 def make_zip(file_names):
+    if not file_names:
+        print("No input files provided")
+        return None
+        
     MIN_PATTERN = 5
     MAX_PATTERN = 100
     compressed_size = 0
@@ -314,7 +317,7 @@ def make_zip(file_names):
             selected_patterns[pattern] = pid # assign a pattern id to a pattern if it saces space
             all_patterns[pid] = pattern
             pid += 1
-            if pid >= 65536:
+            if pid >= 65536:  # Maximum number of patterns (2^16)
                 break
     
     for file, binary in binary_files.items():
@@ -424,6 +427,7 @@ def main():
         print("       make brute <zip_file> <mask> cont")
         print("       make detect_bomb <zip_file>")
         print("       make make_zip <file1> <file2>...")
+        print("       make make_encrypted_zip <zip_file> <password> <file1> <file2>...")
         print("       make decompress <file.bin>")
         return 1
     
