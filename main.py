@@ -401,14 +401,14 @@ def decompress_file(compressed_filename, pattern_dict):
 def save_patterns(pattern_dict):
     filename='patterns.bin'
     with open(filename, 'wb') as f:
-        f.write(len(pattern_dict).to_bytes(4, 'big'))
+        f.write(len(pattern_dict).to_bytes(4, 'big')) # write the length of dictionary
         for p_id, pattern in pattern_dict.items():
-            f.write(p_id.to_bytes(2, 'big'))
-            f.write(len(pattern).to_bytes(4, 'big'))
-            f.write(pattern)
+            f.write(p_id.to_bytes(2, 'big')) # write the pattern id
+            f.write(len(pattern).to_bytes(4, 'big')) # write the length of the pattern
+            f.write(pattern) # write the pattern
 
 def load_patterns():
-    filename='patterns.bin'
+    filename='patterns.bin' # load the patterns based off of how they were added in save_patterns
     patterns = {}
     with open(filename, 'rb') as f:
         num_patterns = int.from_bytes(f.read(4), 'big')
