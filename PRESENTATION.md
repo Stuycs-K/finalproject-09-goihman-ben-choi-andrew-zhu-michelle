@@ -88,3 +88,33 @@ def make_bomb(zip_path):
         for i in range(1000):
             zip_file.writestr(f'file_{i}.txt', 'a'*1000000)
 ```
+
+### Custom Compression (make_zip)
+This feature implements a custom compression algorithm that uses pattern matching to identify and compress repeated sequences in files. It works by:
+1. Finding repeated patterns in the input files
+2. Replacing these patterns with shorter markers
+3. Storing the patterns in a separate dictionary file
+4. Creating a compressed binary output file
+
+```python
+def make_zip(file_names):
+    # Find repeated patterns across files
+    # Replace patterns with markers
+    # Save patterns to patterns.bin
+    # Create compressed_output.bin
+```
+
+### Custom Decompression (decompress_file)
+This feature decompresses files that were compressed using the custom compression algorithm. It:
+1. Reads the compressed binary file
+2. Loads the pattern dictionary
+3. Replaces markers with original patterns
+4. Reconstructs the original files
+
+```python
+def decompress_file(compressed_filename, pattern_dict):
+    # Read compressed file structure
+    # Load pattern dictionary
+    # Replace markers with patterns
+    # Write decompressed files
+```

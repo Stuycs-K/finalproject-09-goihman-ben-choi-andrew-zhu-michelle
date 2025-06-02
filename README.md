@@ -59,6 +59,22 @@ The program provides several attack methods through a simple command-line interf
    ```
    Example: `make detect_bomb ARGS="suspicious.zip"`
 
+6. **Custom Compression**
+    ```bash
+   make make_zip ARGS="<file1> <file2> ..."
+   ```
+   Example: `make make_zip ARGS="file1.txt file2.txt"`
+   This will create:
+   - `compressed_output.bin`: The compressed data
+   - `patterns.bin`: The pattern dictionary used for compression
+
+7. **Custom Decompression**
+    ```bash
+   make decompress ARGS="<compressed_file>"
+   ```
+   Example: `make decompress ARGS="compressed_output.bin"`
+   Note: Requires `patterns.bin` to be present in the same directory
+
 ### Resources & References
 
 1. Python Standard Libraries

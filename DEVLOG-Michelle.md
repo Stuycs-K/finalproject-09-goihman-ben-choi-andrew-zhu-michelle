@@ -27,5 +27,9 @@ Worked on PRESENTATION.md - 60 min
 ### 2025-05-29 - Wokred on README.md & helped with decompress_file
 Cited libraries in README.md - 20 min
 Helped build decompress_file - 20 min
+Debugged decompress with Andrew - 20 min
 
-### 2025-05-30 - 
+### 2025-05-30 - Revised main.py & tested the program
+Added make_zip and decompress_file to main() in main.py - 2 min
+Tested make_zip and decompress_file - 5 min
+Revised README.md and PRESENTATION.md to include make_zip and decompress_file - 30 min

@@ -19,3 +19,5 @@ I improved make_bomb by making it much more aggressive by making 1mb per file in
 ### 2025-05-29 - Added pause and save progress for brute force attack and updated presentation.md
 Updated the zip bomb maker to use more recent docs - 5 min
 Added pausing brute force attack and save progress - 35 min
+### 2025-05-30 - Added pausing to mask attack
+Added pausing to mask attack - 40 min
