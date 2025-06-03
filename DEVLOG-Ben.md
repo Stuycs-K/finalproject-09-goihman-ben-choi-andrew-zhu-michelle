@@ -36,4 +36,9 @@ Added pausing brute force attack and save progress - 35 min
 Added pausing to mask attack - 40 min
 
 ### 2025-06-02 - Worked on presentation.md and code cleanup 
+
 Removed excess variables from bomb_detection and updated presentation.md with the new checks from bomb_detection, removed old code - 25 min
+
+### 2025-06-03 - Added pause and save progress to presentation.md
+
+Added pause and save progress to presentation.md - 15 min

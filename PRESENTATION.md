@@ -3,9 +3,10 @@
 ## Table of Contents
 1. Wordlist attack
 2. Mask attack with wordlist
-3. Brute force mask attack
-4. Zip bomb detection
-5. Zip bomb maker
+3. Pause and Resume Functionality
+4. Brute force mask attack
+5. Zip bomb detection
+6. Zip bomb maker
 
 ## Libraries
 1. zipfile - open, read, write, and inspect ZIP archives
@@ -13,6 +14,7 @@
 3. sys - access command-line arguments
 4. itertools - iterate over all combinations of unknown characters in the mask, enabling a brute‐force loop without manual nested loops
 5. string - build character set used for brute‐forcing masked passwords
+6. select - check for user input without blocking the main attack loop
 
 ## Features Explanation
 
@@ -39,6 +41,18 @@ def mask_attack(zip_path, wordlist_path, mask):
     with open(wordlist_path, 'r', encoding='utf-8', errors='ignore') as wordlist:
         wordlist = [word for word in wordlist if matches_mask(word.strip(), mask)]
         return attack(zip_path, wordlist)
+```
+
+### Pause and Resume Functionality
+This feature allows users to pause  attacks by pressing 'q' and resume them later using the `cont` parameter. Progress is saved to files (`where.txt` for wordlist/mask attacks, `brute_where.txt` for brute force) and validated when resuming to ensure no errors.
+
+```python
+# Check if user pressed 'q' to pause
+if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
+    key = sys.stdin.read(1)
+    if key.lower() == 'q':
+        save_progress(zip_path, wordlist_path, line_num)
+        return None
 ```
 
 ### Brute force mask attack
