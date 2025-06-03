@@ -6,6 +6,9 @@ wordlist:
 mask: 
 	@python3 main.py mask $(ARGS)
 
+brute:
+	@python3 main.py brute $(ARGS)
+	
 make_bomb: 
 	@python3 main.py make_bomb $(ARGS)
 
