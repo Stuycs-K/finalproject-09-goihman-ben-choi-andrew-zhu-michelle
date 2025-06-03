@@ -40,5 +40,5 @@ Added pausing to mask attack - 40 min
 Removed excess variables from bomb_detection and updated presentation.md with the new checks from bomb_detection, removed old code - 25 min
 
 ### 2025-06-03 - Added pause and save progress to presentation.md
-
 Added pause and save progress to presentation.md - 15 min
+Worked on ctrl c and other input stuff - 20 min

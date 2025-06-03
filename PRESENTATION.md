@@ -15,6 +15,7 @@
 4. itertools - iterate over all combinations of unknown characters in the mask, enabling a brute‐force loop without manual nested loops
 5. string - build character set used for brute‐forcing masked passwords
 6. select - check for user input without blocking the main attack loop
+7. signal - handle ctrl c
 
 ## Features Explanation
 
@@ -44,9 +45,15 @@ def mask_attack(zip_path, wordlist_path, mask):
 ```
 
 ### Pause and Resume Functionality
-This feature allows users to pause  attacks by pressing 'q' and resume them later using the `cont` parameter. Progress is saved to files (`where.txt` for wordlist/mask attacks, `brute_where.txt` for brute force) and validated when resuming to ensure no errors.
+This feature allows users to pause  attacks by pressing 'q' and resume them later using the `cont` parameter. Progress is saved to files (`where.txt` for wordlist/mask attacks, `brute_where.txt` for brute force) and validated when resuming to ensure no errors. This however doesn't let ctrl c work. So I added a signal handler to handle ctrl c.
 
 ```python
+# Handle ctrl c
+def sigint_handler(signum, frame):
+    os.kill(os.getpid(), signal.SIGTERM)
+
+signal.signal(signal.SIGINT, sigint_handler)
+
 # Check if user pressed 'q' to pause
 if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
     key = sys.stdin.read(1)

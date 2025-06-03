@@ -87,6 +87,7 @@ The program provides several attack methods through a simple command-line interf
 - [subprocess](https://docs.python.org/3/library/subprocess.html) - For running commands in test suite
 - [tempfile](https://docs.python.org/3/library/tempfile.html) - For temporary file operations in testing
 - [select](https://docs.python.org/3/library/select.html) - For waiting for user input without blocking the main attack loop
+- [signal](https://docs.python.org/3/library/signal.html) - For handling ctrl c
 2. External Resources
 - [Understanding ZIP Bombs](https://www.microsoft.com/en-us/windows/learning-center/what-is-a-zip-bomb) - For ZIP bomb detection and creation features
 - [GNU Make Manual](https://www.gnu.org/software/make/manual/make.html) - For command-line interface implementation
