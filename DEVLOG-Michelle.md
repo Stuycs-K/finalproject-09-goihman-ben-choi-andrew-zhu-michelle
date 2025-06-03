@@ -37,3 +37,6 @@ Revised README.md and PRESENTATION.md to include make_zip and decompress_file - 
 ### 2025-06-02 - Final check & video breakdown
 Tested every function & ensured functionality - 20 min
 Planned video breakdown - 20 min
+
+### 2025-06-03 - Presentation planning
+Planned presentation - 40 mins
