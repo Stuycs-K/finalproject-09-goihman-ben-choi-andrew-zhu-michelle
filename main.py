@@ -5,8 +5,14 @@ import itertools
 import string
 import shutil
 import tempfile
+import signal
 import select
 import json
+
+def sigint_handler(signum, frame):
+    os.kill(os.getpid(), signal.SIGTERM)
+
+signal.signal(signal.SIGINT, sigint_handler)
 
 def save_progress(zip_path, wordlist_path, line_num):
     with open("where.txt", "w") as f:

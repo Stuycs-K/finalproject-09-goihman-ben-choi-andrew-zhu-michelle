@@ -1,0 +1,3 @@
+1. make wordlist ARGS="test.zip passwords.txt"
+2. make mask ARGS="test.zip passwords.txt password___"
+3. make mask ARGS="test
