@@ -45,3 +45,4 @@ Added more comments - 15 mins
 
 ### 2025-06-03 - Presentation planning
 Planned presentation - 40 mins
+Fixed compression algorithm to be more selective about patterns - 30 mins
