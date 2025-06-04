@@ -42,3 +42,4 @@ Removed excess variables from bomb_detection and updated presentation.md with th
 ### 2025-06-03 - Added pause and save progress to presentation.md
 Added pause and save progress to presentation.md - 15 min
 Worked on ctrl c and other input stuff - 20 min
+Worked on demo commands - 20 min
