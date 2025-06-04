@@ -32,7 +32,7 @@ def dict_attack(zip_path, wordlist_path):
 ```
 
 ### Mask attack with wordlist
-This feature combines a wordlist with a mask pattern. The mask uses '_' as a wildcard character, and only passwords from the wordlist that match the mask pattern are tried. For example, if the mask is "pass___", it will only try passwords from the wordlist that start with "pass" followed by any three characters. To do this it first makes a wordlist of valid passwords from the wordlist that match the mask pattern, than does the same dictionary attack just with the new wordlist.
+This feature combines a wordlist with a mask pattern. The mask uses '\_' as a wildcard character, and only passwords from the wordlist that match the mask pattern are tried. For example, if the mask is "pass___", it will only try passwords from the wordlist that start with "pass" followed by any three characters. To do this it first makes a wordlist of valid passwords from the wordlist that match the mask pattern, than does the same dictionary attack just with the new wordlist.
 
 ```python
 def mask_attack(zip_path, wordlist_path, mask):
