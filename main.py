@@ -291,10 +291,10 @@ def make_zip(file_names):
         print("No input files provided")
         return None
         
-    MIN_PATTERN = 10
+    MIN_PATTERN = 5
     MAX_PATTERN = 100
-    MIN_OCCURRENCES = 3
-    MIN_SPACE_SAVED = 20
+    MIN_OCCURRENCES = 2
+    MIN_SPACE_SAVED = 10
     compressed_size = 0
     original_size = 0
     binary_files = {} # store all of the files in binary with the key being file name
@@ -316,25 +316,25 @@ def make_zip(file_names):
     
     selected_patterns = {} # patterns used for compression later
     pid = 0 # counter
-    for pattern, occurrences in global_patterns.items():
+    sorted_global_patterns = sorted(global_patterns.items(), 
+                            key=lambda x: (len(x[1]) * len(x[0])) - (len(x[1]) * 4) - len(x[0]), 
+                            reverse=True)
+    for pattern, occurrences in sorted_global_patterns:
         total_occurrences = len(occurrences)
         pattern_length = len(pattern)
         space_saved = (total_occurrences * pattern_length) - (total_occurrences * 4) - pattern_length
         
-        if space_saved > 0 and total_occurrences > 1:
-            selected_patterns[pattern] = pid # assign a pattern id to a pattern if it saces space
+        # CHANGED: More strict criteria
+        if space_saved >= MIN_SPACE_SAVED and total_occurrences >= MIN_OCCURRENCES:
+            selected_patterns[pattern] = pid # assign a pattern id to a pattern if it saves space
             all_patterns[pid] = pattern
             pid += 1
-            if pid >= 65536:  # Maximum number of patterns (2^16)
+            if pid >= 1000:  # CHANGED: Limit to 1000 best patterns instead of 65536
                 break
     
     for file, binary in binary_files.items():
         new_data = binary
-        
-        sorted_global_patterns = sorted(global_patterns.items(), 
-                                  key=lambda x: (len(x[1]) * len(x[0])) - (len(x[1]) * 4) - len(x[0]), 
-                                  reverse=True)
-        
+        sorted_patterns = sorted(selected_patterns.items(), key=lambda x: len(x[0]), reverse=True)
         for pattern, pattern_id in sorted_patterns:
             marker = b'\xFF\xFE' # marker for compressed patterns, acts like a flag 
             flag = marker + pattern_id.to_bytes(2, 'big')
