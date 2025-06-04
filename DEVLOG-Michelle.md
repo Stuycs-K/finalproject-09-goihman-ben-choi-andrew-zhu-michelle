@@ -39,4 +39,5 @@ Tested every function & ensured functionality - 20 min
 Planned video breakdown - 20 min
 
 ### 2025-06-03 - Presentation planning
-Planned presentation - 40 mins
+Planned presentation - 40 min
+Figured out demo commands - 20 min
