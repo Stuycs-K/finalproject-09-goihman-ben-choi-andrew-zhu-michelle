@@ -113,10 +113,10 @@ def bomb_detection(zip_path):
 This feature creates a simple zip bomb by generating a ZIP file containing 1000 small text files. While this is a basic example, it demonstrates how zip bombs can be created. It writes 1000 files, each containing 1MB of 'a' characters.
 
 ```python
-def make_bomb(zip_path):
-    with zipfile.ZipFile(zip_path, 'w') as zip_file:
-        for i in range(1000):
-            zip_file.writestr(f'file_{i}.txt', 'a'*1000000)
+for i in range(1000):
+    file_path = os.path.join(temp_dir, f'file_{i}.txt')
+        with open(file_path, 'w') as f:
+            f.write('a' * 1000000) # 1MB of 'a' characters per file
 ```
 
 ### Custom Compression (make_zip)
