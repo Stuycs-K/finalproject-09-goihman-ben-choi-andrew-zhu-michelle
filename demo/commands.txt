@@ -1,3 +1,9 @@
-1. make wordlist ARGS="test.zip passwords.txt"
-2. make mask ARGS="test.zip passwords.txt password___"
-3. make mask ARGS="test
+1. make wordlist ARGS="demo/test.zip passwords.txt"
+2. make mask ARGS="demo/test.zip demo/passwords.txt areallycoollongpassw___"
+3. make wordlist ARGS="demo/test.zip demo/rockyou.txt"
+4. make wordlist ARGS="demo/test.zip demo/rockyou.txt cont"
+5. make brute ARGS="demo/test.zip areallycoollongpasswor_"
+6. make detect_bomb ARGS="demo/bomb.zip"
+7. make make_bomb ARGS="demo/bomb2.zip"
+8. make detect_bomb ARGS="demo/bomb2.zip" 
+9. 

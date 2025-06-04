@@ -185,6 +185,7 @@ def mask_attack(zip_path, wordlist_path, mask, start_line=0):
 
 
 def dict_attack(zip_path, wordlist_path, start_line=0):
+    print(f"Starting dictionary attack on {zip_path} with wordlist {wordlist_path} starting at line {start_line}")
     if not os.path.exists(wordlist_path):
         print(f"Error: Wordlist file '{wordlist_path}' not found")
         return None
@@ -209,6 +210,7 @@ def dict_attack(zip_path, wordlist_path, start_line=0):
                         return None
                 
                 try:
+                    print(f"Trying password: {password}")
                     zip_file.extractall(pwd=password.encode())
                     print(f"Password found: {password}")
                     if os.path.exists("where.txt"):
