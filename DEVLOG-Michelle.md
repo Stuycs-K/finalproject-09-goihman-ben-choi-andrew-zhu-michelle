@@ -40,4 +40,5 @@ Planned video breakdown - 20 min
 
 ### 2025-06-03 - Presentation planning
 Planned presentation - 40 min
-Figured out demo commands - 20 min
+Tested functions - 20 min
+Figured out demo commands - 40 min

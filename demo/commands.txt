@@ -1,6 +1,10 @@
-1. make wordlist ARGS="test.zip passwords.txt"
-2. make mask ARGS="test.zip passwords.txt password___"
-3. make mask ARGS="test
+make wordlist ARGS="demo/test.zip demo/passwords.txt"
+
+make mask ARGS="demo/test.zip demo/passwords.txt areallycoollongpassw___"
+
+make brute ARGS="demo/test.zip areallycoollongpasswor_"
+
+make mask ARGS="test
 echo "test file 1" > demo/test1.txt; echo "test file 2" > demo/test2.txt; echo "test file 3" > demo/test3.txt; echo "test file 4" > demo/test4.txt; echo ‘Cities present unique challenges and opportunities for wildlife, and many species have shown remarkable adaptability in urban environments. Peregrine falcons, once endangered due to pesticide use, have made a stunning comeback by nesting on skyscrapers and hunting pigeons in downtown areas. These aerial predators have discovered that tall buildings mimic their natural cliff habitats, while the abundance of prey birds in cities provides a reliable food source. Their hunting speeds, which can exceed 200 miles per hour during dives, make them perfectly suited for navigating the vertical landscape of modern metropolises.Urban coyotes represent another success story of wildlife adaptation, though their presence often creates tension with human residents. These intelligent canids have learned to navigate city streets, often using storm drains and green corridors as highways through densely populated areas. They've modified their behavior significantly from their rural counterparts, becoming more nocturnal and adjusting their diet to include everything from pet food to fallen fruit from ornamental trees. Their pack structures have also evolved, with urban coyotes often living in smaller family groups that can better exploit the scattered resources of city life. Perhaps most remarkably, some urban wildlife populations are beginning to show genetic changes that reflect their city living. Studies of urban birds have found differences in song patterns, with species like great tits developing higher-pitched calls that can better penetrate through traffic noise. Urban mice have been found to have different coat colors and stress hormone levels compared to their rural relatives. These rapid evolutionary changes suggest that cities aren't just temporary habitats that animals tolerate, but are becoming distinct ecosystems that are actively shaping the species that live within them.’ > demo/bigfile.txt
 
 make make_zip ARGS="demo/test3.txt demo/test4.txt demo/bigfile.txt demo/test1.txt demo/test2.txt"
