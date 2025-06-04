@@ -35,48 +35,74 @@ The program provides several attack methods through a simple command-line interf
    ```bash
    make wordlist ARGS="<zip_file> <wordlist_file>"
    ```
-   Example: `make wordlist ARGS="protected.zip passwords.txt"`
+   Example: `make wordlist ARGS="demo/test.zip demo/passwords.txt"`
 
 2. **Mask Attack with Wordlist**
    ```bash
    make mask ARGS="<zip_file> <wordlist_file> <mask>"
    ```
-   Example: `make mask ARGS="protected.zip passwords.txt "mask"`
+   Example: `make mask ARGS="demo/test.zip demo/passwords.txt areallycoollongpassw___"`
 
 3. **Brute Force Mask Attack**
    ```bash
    make mask ARGS="<zip_file> <mask>"
    ```
-   Example: `make mask ARGS="protected.zip "mask"`
+   Example: `make mask ARGS="demo/test.zip areallycoollongpasswor_"`
 
-4. **ZIP Bomb Detection**
+4. **Dedicated Brute Force Attack**
+   ```bash
+   make brute ARGS="<zip_file> <mask>"
+   ```
+   Example: `make brute ARGS="demo/test.zip areallycoollongpasswor_"`
+
+5. **ZIP Bomb Detection**
    ```bash
    make detect_bomb ARGS="<zip_file>"
    ```
-   Example: `make detect_bomb ARGS="suspicious.zip"`
+   Example: `make detect_bomb ARGS="demo/bomb.zip"`
 
-5. **ZIP Bomb Maker**
+6. **ZIP Bomb Maker**
     ```bash
    make make_bomb ARGS="<zip_file>"
    ```
-   Example: `make detect_bomb ARGS="suspicious.zip"`
+   Example: `make make_bomb ARGS="demo/bomb1.zip"`
 
-6. **Custom Compression**
+7. **Custom Compression**
     ```bash
    make make_zip ARGS="<file1> <file2> ..."
    ```
-   Example: `make make_zip ARGS="file1.txt file2.txt"`
+   Example: `make make_zip ARGS="demo/test1.txt demo/test2.txt demo/bigfile.txt"`
    This will create:
    - `compressed_output.bin`: The compressed data
    - `patterns.bin`: The pattern dictionary used for compression
 
-7. **Custom Decompression**
+8. **Custom Decompression**
     ```bash
    make decompress ARGS="<compressed_file>"
    ```
    Example: `make decompress ARGS="compressed_output.bin"`
    Note: Requires `patterns.bin` to be present in the same directory
    Note: The default output for this is compressed_output.bin, so the argument should always be compressed_output.bin unless the name is changed.
+
+### Continuation Feature
+
+All attack methods support resuming from where they left off if interrupted:
+
+- **Continue Wordlist Attack**: `make wordlist ARGS="<zip_file> <wordlist_file> cont"`
+  Example: `make wordlist ARGS="demo/test.zip demo/rockyou.txt cont"`
+  For this one rockyou.txt must be downloaded and you have to add areallycoollongpassword around the 100k line, can not add to git due to file size
+
+- **Continue Mask Attack**: `make mask ARGS="<zip_file> <wordlist_file> <mask> cont"`
+  Example: `make mask ARGS="demo/test.zip demo/passwords.txt areallycoollongpassw___ cont"`
+
+- **Continue Brute Force**: `make brute ARGS="<zip_file> <mask> cont"`
+  Example: `make brute ARGS="demo/test.zip areallycoollongpasswor_ cont"`
+
+**How it works:**
+- Press 'q' during any attack to save progress and exit
+- Use the `cont` parameter to resume from the saved position
+- Progress is automatically saved to `where.txt` (wordlist/mask attacks) or `brute_where.txt` (brute force attacks)
+- Progress files are automatically cleaned up when attacks complete successfully
 
 ### Resources & References
 
