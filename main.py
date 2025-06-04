@@ -291,8 +291,10 @@ def make_zip(file_names):
         print("No input files provided")
         return None
         
-    MIN_PATTERN = 5
+    MIN_PATTERN = 10
     MAX_PATTERN = 100
+    MIN_OCCURRENCES = 3
+    MIN_SPACE_SAVED = 20
     compressed_size = 0
     original_size = 0
     binary_files = {} # store all of the files in binary with the key being file name
@@ -329,7 +331,9 @@ def make_zip(file_names):
     for file, binary in binary_files.items():
         new_data = binary
         
-        sorted_patterns = sorted(selected_patterns.items(), key=lambda x: len(x[0]), reverse=True)
+        sorted_global_patterns = sorted(global_patterns.items(), 
+                                  key=lambda x: (len(x[1]) * len(x[0])) - (len(x[1]) * 4) - len(x[0]), 
+                                  reverse=True)
         
         for pattern, pattern_id in sorted_patterns:
             marker = b'\xFF\xFE' # marker for compressed patterns, acts like a flag 
@@ -409,6 +413,7 @@ def save_patterns(pattern_dict):
     with open(filename, 'wb') as f:
         f.write(len(pattern_dict).to_bytes(4, 'big')) # write the length of dictionary
         for p_id, pattern in pattern_dict.items():
+            print(p_id)
             f.write(p_id.to_bytes(2, 'big')) # write the pattern id
             f.write(len(pattern).to_bytes(4, 'big')) # write the length of the pattern
             f.write(pattern) # write the pattern
