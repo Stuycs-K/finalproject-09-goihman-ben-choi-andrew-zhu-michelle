@@ -293,8 +293,8 @@ def make_zip(file_names):
         
     MIN_PATTERN = 5
     MAX_PATTERN = 100
-    MIN_OCCURRENCES = 2
-    MIN_SPACE_SAVED = 10
+    MIN_OCCURRENCES = 4
+    MIN_SPACE_SAVED = 30
     compressed_size = 0
     original_size = 0
     binary_files = {} # store all of the files in binary with the key being file name
@@ -413,7 +413,6 @@ def save_patterns(pattern_dict):
     with open(filename, 'wb') as f:
         f.write(len(pattern_dict).to_bytes(4, 'big')) # write the length of dictionary
         for p_id, pattern in pattern_dict.items():
-            print(p_id)
             f.write(p_id.to_bytes(2, 'big')) # write the pattern id
             f.write(len(pattern).to_bytes(4, 'big')) # write the length of the pattern
             f.write(pattern) # write the pattern

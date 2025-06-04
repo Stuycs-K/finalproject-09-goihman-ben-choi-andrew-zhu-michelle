@@ -1,3 +1,0 @@
-demo/test.zip
-demo/rockyou.txt
-48348

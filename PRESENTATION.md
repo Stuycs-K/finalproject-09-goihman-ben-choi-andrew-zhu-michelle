@@ -48,7 +48,6 @@ def mask_attack(zip_path, wordlist_path, mask):
 This feature allows users to pause  attacks by pressing 'q' and resume them later using the `cont` parameter. Progress is saved to files (`where.txt` for wordlist/mask attacks, `brute_where.txt` for brute force) and validated when resuming to ensure no errors. This however doesn't let ctrl c work. So I added a signal handler to handle ctrl c.
 
 ```python
-# Handle ctrl c
 def sigint_handler(signum, frame):
     os.kill(os.getpid(), signal.SIGTERM)
 
