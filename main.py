@@ -293,8 +293,8 @@ def make_zip(file_names):
         
     MIN_PATTERN = 5
     MAX_PATTERN = 100
-    MIN_OCCURRENCES = 4
-    MIN_SPACE_SAVED = 30
+    MIN_OCCURRENCES = 5
+    MIN_SPACE_SAVED = 40
     compressed_size = 0
     original_size = 0
     binary_files = {} # store all of the files in binary with the key being file name
